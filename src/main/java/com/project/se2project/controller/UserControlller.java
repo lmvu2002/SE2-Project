@@ -23,4 +23,13 @@ public class UserControlller {
         return "demo";
     }
 
+    public boolean withdraw(User user, long amount) {
+        if (user.getBalance() - amount >= 50000) {
+            user.minus(amount);//tru tien
+            return true;
+        }
+        return false;
+
+    }
+
 }

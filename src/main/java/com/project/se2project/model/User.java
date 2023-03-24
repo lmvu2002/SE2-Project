@@ -32,6 +32,29 @@ public class User {
         return balance;
     }
 
+    @NonNull
+    private String dob;
+
+    @NonNull
+    private boolean isNew;
+
+    @NonNull
+    public String getDob() {
+        return dob;
+    }
+
+    public void setDob(@NonNull String dob) {
+        this.dob = dob;
+    }
+
+    public boolean isNew() {
+        return isNew;
+    }
+
+    public void setNew(boolean aNew) {
+        isNew = aNew;
+    }
+
     public void add(@NonNull Long amount) {
         this.balance = this.balance+amount;
     }
