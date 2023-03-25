@@ -32,6 +32,10 @@ public class User {
         return balance;
     }
 
+    public void setId(@NonNull Long id) {
+        this.id = id;
+    }
+
     @NonNull
     private String dob;
 
