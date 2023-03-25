@@ -8,6 +8,7 @@ public class Se2ProjectApplication {
 
     public static void main(String[] args) {
         SpringApplication.run(Se2ProjectApplication.class, args);
+
     }
 
     //nếu có nhiều controller, dùng cái này
