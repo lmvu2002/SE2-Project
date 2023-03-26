@@ -2,10 +2,8 @@ package com.project.se2project.model;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
-import org.hibernate.validator.constraints.Length;
-import org.springframework.lang.NonNull;
 
 @Entity
 public class User {
@@ -22,6 +20,7 @@ public class User {
             max = 25,
             message = "Username must be between {min} and {max} characters long"
     )
+    @NotBlank(message = "Username cannot be blank")
     private String username;
 
     private String password;
@@ -38,10 +37,13 @@ public class User {
 
     private String type;
 
+    @NotBlank(message = "Starting Date cannot be blank")
+    private String startingDate;
+
     public User() {
     }
 
-    public User(String username, String password, String phone, String dob, boolean isNew, String type, Long balance) {
+    public User(String username, String password, String phone, String dob, boolean isNew, String type, Long balance, String startingDate) {
         this.balance = balance;
         this.username = username;
         this.password = password;
@@ -49,6 +51,7 @@ public class User {
         this.isNew = isNew;
         this.phone = phone;
         this.type = type;
+        this.startingDate = startingDate;
     }
 
     public Long getId() {
@@ -109,5 +112,13 @@ public class User {
 
     public void setType(String type) {
         this.type = type;
+    }
+
+    public String getStartingDate() {
+        return startingDate;
+    }
+
+    public void setStartingDate(String startingDate) {
+        this.startingDate = startingDate;
     }
 }

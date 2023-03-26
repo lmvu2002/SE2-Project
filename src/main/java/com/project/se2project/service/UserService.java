@@ -2,15 +2,19 @@ package com.project.se2project.service;
 
 import com.project.se2project.custom_exception.AlreadyException;
 import com.project.se2project.custom_exception.AuthException;
+import com.project.se2project.domain.User.UpdateUserRequest;
 import com.project.se2project.model.Admin;
 import com.project.se2project.model.User;
 import com.project.se2project.repository.AdminRepository;
 import com.project.se2project.repository.UserRepository;
 import com.project.se2project.utils.JwtUtil;
+import javassist.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -52,7 +56,9 @@ public class UserService {
             throw new AuthException("Password must be between 5 and 15 characters long");
         }
 
-        User newUser = new User(username, passwordEncoder.encode(password), phone, dob, true, "Wait", 0L);
+        String startingDate = new SimpleDateFormat("dd/MM/yyyy").format(new Date());
+
+        User newUser = new User(username, passwordEncoder.encode(password), phone, dob, true, "Wait", 0L, startingDate);
         userRepository.save(newUser);
 
         return newUser;
@@ -68,11 +74,61 @@ public class UserService {
             throw new AuthException("Wrong password or username");
         }
 
-
         return jwtUtil.generateToken(user);
     }
 
-    public void deleteUser(long userId, String jwt) {
+    public void deleteUser(long userId, String jwt) throws NotFoundException {
+        isAdminJwt(jwt);
+
+        Optional<User> user = userRepository.findById(userId);
+
+        if (user.isEmpty()) {
+            throw new NotFoundException("User not found!");
+        }
+
+        userRepository.delete(user.get());
+    }
+
+    public List<User> getAllUser(String jwt) {
+        isAdminJwt(jwt);
+
+        return userRepository.findAll();
+    }
+
+    public User getUserById(long id, String jwt) throws NotFoundException {
+        if (!jwtUtil.validateToken(jwt)) {
+            throw new AuthException("Invalid token");
+        }
+
+        Optional<User> user = userRepository.findById(id);
+
+        if(user.isEmpty()){
+            throw new NotFoundException("User not found!");
+        }
+
+        return user.get();
+    }
+
+    public User updateUser(long id, UpdateUserRequest updateUserRequest, String jwt) throws NotFoundException {
+        isAdminJwt(jwt);
+
+        Optional<User> currentUser = userRepository.findById(id);
+
+        if (currentUser.isEmpty()) {
+            throw new NotFoundException("User not found");
+        }
+
+        currentUser.get().setDob(updateUserRequest.getDob());
+        currentUser.get().setBalance(updateUserRequest.getBalance());
+        currentUser.get().setPhone(updateUserRequest.getPhone());
+        currentUser.get().setType(updateUserRequest.getType());
+
+        userRepository.save(currentUser.get());
+
+        return currentUser.get();
+    }
+
+    private void isAdminJwt(String jwt) {
         if (!jwtUtil.validateToken(jwt)) {
             throw new AuthException("Invalid token");
         }
@@ -82,8 +138,5 @@ public class UserService {
         if (admin == null) {
             throw new AuthException("Invalid Admin");
         }
-
-        User user = userRepository.findById(userId);
-        userRepository.delete(user);
     }
 }

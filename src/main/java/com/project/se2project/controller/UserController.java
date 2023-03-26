@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static com.project.se2project.constant.SecurityConstant.COOKIE_EXPIRIED;
@@ -25,12 +26,6 @@ public class UserController {
 
     @Autowired
     private JwtUtil jwtUtil;
-
-    @GetMapping(value = "/")
-    public String getAllUser(Model model) {
-        List<User> listUsers = userService.findAll();
-        return "demo";
-    }
 
     @PostMapping(value = "/signup")
     public ResponseEntity<?> signup(@Valid @RequestBody UserSignUpRequest userSignUpRequest, HttpServletResponse response) {
@@ -85,6 +80,46 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.OK).body(new DeleteUserResponse("Delete successful"));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new DeleteUserResponse(e.getMessage()));
+        }
+    }
+
+    @GetMapping(value = "/")
+    public ResponseEntity<GetAllUserResponse> getAllUser(@CookieValue(name = "jwt", defaultValue = "dark") String jwt) {
+        try {
+            List<User> allUser = userService.getAllUser(jwt);
+            List<GetUserResponse> getUserResponseList = new ArrayList<>();
+            allUser.forEach((user) -> {
+                GetUserResponse getUserResponse = new GetUserResponse(user);
+                getUserResponseList.add(getUserResponse);
+            });
+
+            return ResponseEntity.status(HttpStatus.OK).body(new GetAllUserResponse(getUserResponseList));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new GetAllUserResponse(e.getMessage()));
+        }
+    }
+
+    @PutMapping(value = "/{id}")
+    public ResponseEntity<UpdateUserResponse> updateUser(
+            @PathVariable long id,
+            @Valid @RequestBody UpdateUserRequest updateUserRequest,
+            @CookieValue(name = "jwt", defaultValue = "dark") String jwt) {
+        try {
+            User user = userService.updateUser(id, updateUserRequest, jwt);
+
+            return ResponseEntity.status(HttpStatus.OK).body(new UpdateUserResponse(user));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new UpdateUserResponse(e.getMessage()));
+        }
+    }
+
+    @GetMapping(value = "/{id}")
+    public ResponseEntity<?> getUserById(@PathVariable long id, @CookieValue(name = "jwt", defaultValue = "dark") String jwt) {
+        try {
+            User user = userService.getUserById(id, jwt);
+            return ResponseEntity.status(HttpStatus.OK).body(new GetUserResponse(user));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Error(e.getMessage()));
         }
     }
 }
