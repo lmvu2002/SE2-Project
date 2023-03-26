@@ -35,6 +35,16 @@ public class UserRepositoryImpl implements UserRepository{
     }
 
     @Override
+    public void isUserNew(String id, boolean isNew) {
+        User user = findById(id);
+        if (user != null) {
+            user.setNew(isNew);
+            entityManager.merge(user);
+        }
+    }
+
+
+    @Override
     public void flush() {
 
     }

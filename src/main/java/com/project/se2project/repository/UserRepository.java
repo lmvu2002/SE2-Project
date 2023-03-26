@@ -7,4 +7,10 @@ import java.util.Optional;
 
 public interface UserRepository extends JpaRepository<User, Long> {
     User findByUsername(String username);
+    User findById(String id);
+
+    void setBalance(String id, double balance);
+
+    void isUserNew(String id, boolean isNew);
+
 }
