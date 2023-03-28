@@ -1,5 +1,6 @@
 package com.project.se2project.controller;
 
+import com.project.se2project.domain.Admin.AdminSetBalanceResponse;
 import com.project.se2project.domain.Admin.AdminSignInRequest;
 import com.project.se2project.domain.Admin.AdminSignInResponse;
 import com.project.se2project.model.Admin;
@@ -43,4 +44,17 @@ public class AdminController {
             return ResponseEntity.status(HttpStatus.CONFLICT).body(adminSignInResponse);
         }
     }
+
+    @PostMapping(value = "/{id}/setBalance")
+    public ResponseEntity<AdminSetBalanceResponse> setBalance(@PathVariable(value = "id") Long id, @RequestParam Long balance) {
+        try {
+            adminService.setUserBalance(id, balance);
+            AdminSetBalanceResponse adminSetBalanceResponse = new AdminSetBalanceResponse("Set balance successfully");
+            return ResponseEntity.status(HttpStatus.OK).body(adminSetBalanceResponse);
+        } catch (Exception e) {
+            AdminSetBalanceResponse adminSetBalanceResponse = new AdminSetBalanceResponse(e.getMessage());
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(adminSetBalanceResponse);
+        }
+    }
+
 }

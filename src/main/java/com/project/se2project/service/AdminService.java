@@ -99,6 +99,22 @@ public class AdminService implements UserDetailsService {
         return jwtUtil.generateToken(admin);
     }
 
+    public User setUserBalance(Long userId, Long balance) throws NotFoundException {
+        try {
+            Optional<User> user = userRepository.findById(userId);
+            if (user.isEmpty()) {
+                throw new NotFoundException("User with id " + userId + " not found");
+            }
+            user.get().setBalance(balance);
+            user.get().setNew(false);
+            userRepository.save(user.get());
+            return user.get();
+        } catch (Exception e) {
+            System.out.println("Error: " + e);
+            throw e;
+        }
+    }
+
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         return null;
