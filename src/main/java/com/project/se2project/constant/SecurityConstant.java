@@ -1,6 +1,10 @@
 package com.project.se2project.constant;
 
 public class SecurityConstant {
+
+    public static final String ADMIN_NAME = "admin";
+    public static final String ADMIN_PASSWORD = "admin";
+    public static final String ADMIN_DOB = "15/01/1992";
     public static final long EXPIRATION_TIME = 432_000_000; //5 days
     public static final String TOKEN_PREFIX = "Bear ";
     public static final String JWT_TOKEN_HEADER = "Jwt-Token";
