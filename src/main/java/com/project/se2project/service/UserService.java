@@ -40,16 +40,16 @@ public class UserService {
         return userRepository.findAll();
     }
 
-    public User signUp(String username, String password, String phone, String dob) {
+    public User signUp(String username, String name, String password, String dob) {
         User user = userRepository.findByUsername(username);
-        Admin admin = adminRepository.findByAdminName(username);
+        Admin admin = adminRepository.findByName(username);
 
         if (admin != null) {
             throw new AlreadyException("This name was taken by another Admin");
         }
 
         if (user != null) {
-            throw new AlreadyException("This name was taken by another User");
+            throw new AlreadyException("This username was taken by another User");
         }
 
         if (password.length() < 5 || password.length() > 15) {
@@ -58,7 +58,7 @@ public class UserService {
 
         String startingDate = new SimpleDateFormat("dd/MM/yyyy").format(new Date());
 
-        User newUser = new User(username, passwordEncoder.encode(password), phone, dob, true, "Wait", 0L, startingDate);
+        User newUser = new User(username, name, passwordEncoder.encode(password), dob, true, "Wait", 0L, startingDate);
         userRepository.save(newUser);
 
         return newUser;
@@ -102,7 +102,7 @@ public class UserService {
 
         Optional<User> user = userRepository.findById(id);
 
-        if(user.isEmpty()){
+        if (user.isEmpty()) {
             throw new NotFoundException("User not found!");
         }
 
@@ -120,7 +120,6 @@ public class UserService {
 
         currentUser.get().setDob(updateUserRequest.getDob());
         currentUser.get().setBalance(updateUserRequest.getBalance());
-        currentUser.get().setPhone(updateUserRequest.getPhone());
         currentUser.get().setType(updateUserRequest.getType());
 
         userRepository.save(currentUser.get());
@@ -133,7 +132,7 @@ public class UserService {
             throw new AuthException("Invalid token");
         }
 
-        Admin admin = adminRepository.findByAdminName(jwtUtil.getUsernameFromJWT(jwt));
+        Admin admin = adminRepository.findByName(jwtUtil.getUsernameFromJWT(jwt));
 
         if (admin == null) {
             throw new AuthException("Invalid Admin");

@@ -7,8 +7,6 @@ import java.io.Serializable;
 public class GetUserResponse implements Serializable {
     private String username;
 
-    private String phone;
-
     private String dob;
 
     private String type;
@@ -22,7 +20,6 @@ public class GetUserResponse implements Serializable {
 
     public GetUserResponse(User user) {
         this.username = user.getUsername();
-        this.phone = user.getPhone();
         this.dob = user.getDob();
         this.type = user.getType();
         this.balance = user.getBalance();
@@ -35,14 +32,6 @@ public class GetUserResponse implements Serializable {
 
     public void setUsername(String username) {
         this.username = username;
-    }
-
-    public String getPhone() {
-        return phone;
-    }
-
-    public void setPhone(String phone) {
-        this.phone = phone;
     }
 
     public String getDob() {

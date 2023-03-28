@@ -11,10 +11,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
+import org.springframework.validation.Errors;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import static com.project.se2project.constant.SecurityConstant.COOKIE_EXPIRIED;
 
@@ -32,8 +35,8 @@ public class UserController {
         try {
             User user = userService.signUp(
                     userSignUpRequest.getUsername(),
+                    userSignUpRequest.getName(),
                     userSignUpRequest.getPassword(),
-                    userSignUpRequest.getPhone(),
                     userSignUpRequest.getDob()
             );
 

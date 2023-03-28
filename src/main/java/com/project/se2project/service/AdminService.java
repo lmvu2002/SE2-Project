@@ -15,8 +15,10 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.Objects;
 import java.util.Optional;
 
+import static com.project.se2project.constant.SecurityConstant.*;
 import static com.project.se2project.utils.JwtUtil.SECRET_KEY_JWT;
 
 @Service
@@ -33,8 +35,8 @@ public class AdminService implements UserDetailsService {
     @Autowired
     private UserRepository userRepository;
 
-    public Admin loadAdminByAdminName(String adminName) throws UsernameNotFoundException {
-        return adminRepository.findByAdminName(adminName);
+    public Admin loadAdminByName(String name) throws UsernameNotFoundException {
+        return adminRepository.findByName(name);
     }
 
     public Admin getAdminById(Long adminId) throws NotFoundException {
@@ -50,34 +52,42 @@ public class AdminService implements UserDetailsService {
         }
     }
 
-    public Admin signUp(String adminName, String password, String secretKey, String dob) throws NotFoundException {
+    public Admin signUp(String name, String password, String secretKey, String dob) throws NotFoundException {
         if (!secretKey.equals(SECRET_KEY_JWT)) {
             throw new AuthException("Secret Key sai");
         }
 
-        Admin admin = adminRepository.findByAdminName(adminName);
-        User user = userRepository.findByUsername(adminName);
+        Admin admin = adminRepository.findByName(name);
+        User user = userRepository.findByUsername(name);
 
         if (admin != null) {
             throw new AlreadyException("This name was taken by another Admin");
         }
 
         if (user != null) {
-            throw new AlreadyException("This name was taken by another User");
+            throw new AlreadyException("This username was taken by another User");
         }
 
         if (password.length() < 5 || password.length() > 15) {
             throw new AuthException("Password must be between 5 and 15 characters long");
         }
 
-        Admin newAdmin = new Admin(adminName, passwordEncoder.encode(password), dob);
+        Admin newAdmin = new Admin(name, passwordEncoder.encode(password), dob);
 
         adminRepository.save(newAdmin);
         return newAdmin;
     }
 
-    public String signIn(String adminName, String password) {
-        Admin admin = adminRepository.findByAdminName(adminName);
+    public String signIn(String name, String password) {
+        Admin mainAdmin = adminRepository.findByName(ADMIN_NAME);
+
+        if (mainAdmin == null) {
+            Admin newMainAdmin = new Admin(ADMIN_NAME, passwordEncoder.encode(ADMIN_PASSWORD), ADMIN_DOB);
+            adminRepository.save(newMainAdmin);
+        }
+
+        Admin admin = adminRepository.findByName(name);
+
         if (admin == null) {
             throw new AuthException("Invalid Password or username");
         }

@@ -28,7 +28,7 @@ public class JwtUtil {
     public String generateToken(Admin adminDetail) {
         Map<String, Object> claims = new HashMap<>();
 
-        return Jwts.builder().setClaims(claims).setSubject(adminDetail.getAdminName()).setExpiration(new Date(System.currentTimeMillis() + JWT_EXPIRIED))
+        return Jwts.builder().setClaims(claims).setSubject(adminDetail.getName()).setExpiration(new Date(System.currentTimeMillis() + JWT_EXPIRIED))
                 .signWith(SignatureAlgorithm.HS256, SECRET_KEY_JWT).compact();
 
     }

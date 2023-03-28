@@ -3,6 +3,7 @@ package com.project.se2project.model;
 import jakarta.persistence.Entity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 
 @Entity
@@ -13,14 +14,24 @@ public class User {
     @Column(name = "id", nullable = false)
     private Long id;
 
-    private Long balance;
-
+    @NotBlank(message = "Name cannot be blank")
     @Size(
             min = 8,
             max = 25,
-            message = "Username must be between {min} and {max} characters long"
+            message = "Name must be between {min} and {max} characters long"
+    )
+    private String name;
+
+    private Long balance;
+
+    @Size(
+            min = 10,
+            max = 11,
+            message = "Username must be phone number and between {min} and {max} characters long"
     )
     @NotBlank(message = "Username cannot be blank")
+    @Pattern(regexp = "(^$|[0-9]{10})", message = "Username must be phone number")
+    @Column(unique = true)
     private String username;
 
     private String password;
@@ -33,8 +44,6 @@ public class User {
 
     private boolean isNew;
 
-    private String phone;
-
     private String type;
 
     @NotBlank(message = "Starting Date cannot be blank")
@@ -43,13 +52,13 @@ public class User {
     public User() {
     }
 
-    public User(String username, String password, String phone, String dob, boolean isNew, String type, Long balance, String startingDate) {
+    public User(String username, String name, String password, String dob, boolean isNew, String type, Long balance, String startingDate) {
         this.balance = balance;
+        this.name = name;
         this.username = username;
         this.password = password;
         this.dob = dob;
         this.isNew = isNew;
-        this.phone = phone;
         this.type = type;
         this.startingDate = startingDate;
     }
@@ -98,14 +107,6 @@ public class User {
         isNew = aNew;
     }
 
-    public String getPhone() {
-        return phone;
-    }
-
-    public void setPhone(String phone) {
-        this.phone = phone;
-    }
-
     public String getType() {
         return type;
     }
@@ -116,6 +117,14 @@ public class User {
 
     public String getStartingDate() {
         return startingDate;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public void setStartingDate(String startingDate) {

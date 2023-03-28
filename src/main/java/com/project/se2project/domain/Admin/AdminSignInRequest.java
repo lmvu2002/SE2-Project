@@ -7,7 +7,7 @@ import java.io.Serializable;
 public class AdminSignInRequest implements Serializable {
 
     @NotBlank(message = "Admin name cannot be blank")
-    private String adminName;
+    private String name;
 
     @NotBlank(message = "Password cannot be blank")
     private String password;
@@ -15,17 +15,17 @@ public class AdminSignInRequest implements Serializable {
     public AdminSignInRequest() {
     }
 
-    public AdminSignInRequest(String adminName, String password) {
-        this.adminName = adminName;
+    public AdminSignInRequest(String name, String password) {
+        this.name = name;
         this.password = password;
     }
 
-    public String getAdminName() {
-        return adminName;
+    public String getName() {
+        return name;
     }
 
-    public void setAdminName(String adminName) {
-        this.adminName = adminName;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getPassword() {

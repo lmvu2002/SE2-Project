@@ -3,6 +3,7 @@ package com.project.se2project.model;
 import jakarta.persistence.Entity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import org.hibernate.validator.constraints.Length;
 import org.springframework.lang.NonNull;
@@ -15,23 +16,21 @@ public class Admin {
     @Column(name = "id", nullable = false)
     private Long id;
 
-    @Size(
-            min = 8,
-            max = 25,
-            message = "Admin name must be between {min} and {max} characters long"
-    )
-    private String adminName;
+    @NotBlank(message = "Admin name cannot be blank")
+    private String name;
 
+    @NotBlank(message = "Admin password cannot be blank")
     private String password;
 
+    @NotBlank(message = "Admin dob cannot be blank")
     private String dob;
 
 
     public Admin() {
     }
 
-    public Admin(String adminName, String password, String dob) {
-        this.adminName = adminName;
+    public Admin(String name, String password, String dob) {
+        this.name = name;
         this.password = password;
         this.dob = dob;
     }
@@ -44,12 +43,12 @@ public class Admin {
         this.id = id;
     }
 
-    public String getAdminName() {
-        return adminName;
+    public String getName() {
+        return name;
     }
 
-    public void setAdminName(String adminName) {
-        this.adminName = adminName;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getPassword() {
