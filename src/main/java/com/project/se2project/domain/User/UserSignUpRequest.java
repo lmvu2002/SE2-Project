@@ -1,5 +1,7 @@
 package com.project.se2project.domain.User;
+
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 
 import java.io.Serializable;
@@ -8,11 +10,20 @@ public class UserSignUpRequest implements Serializable {
     private Long balance;
 
     @Size(
+            min = 10,
+            max = 11,
+            message = "User name must be phone number and between {min} and {max} characters long"
+    )
+    @Pattern(regexp = "(^$|[0-9]{10})", message = "Username must be phone number")
+    private String username;
+
+    @NotBlank(message = "Name cannot be blank")
+    @Size(
             min = 8,
             max = 25,
-            message = "User name must be between {min} and {max} characters long"
+            message = "Name must be between {min} and {max} characters long"
     )
-    private String username;
+    private String name;
 
     @Size(
             min = 5,
@@ -27,16 +38,13 @@ public class UserSignUpRequest implements Serializable {
 
     private boolean isNew;
 
-    @NotBlank(message = "User phone cannot be blank")
-    private String phone;
-
     public UserSignUpRequest() {
     }
 
-    public UserSignUpRequest(String username, String password, String phone, String dob, Long balance) {
+    public UserSignUpRequest(String username, String name, String password, String dob, Long balance) {
         this.username = username;
+        this.name = name;
         this.password = password;
-        this.phone = phone;
         this.dob = dob;
         this.balance = balance;
     }
@@ -81,11 +89,11 @@ public class UserSignUpRequest implements Serializable {
         isNew = aNew;
     }
 
-    public String getPhone() {
-        return phone;
+    public String getName() {
+        return name;
     }
 
-    public void setPhone(String phone) {
-        this.phone = phone;
+    public void setName(String name) {
+        this.name = name;
     }
 }
