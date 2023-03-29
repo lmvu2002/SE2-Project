@@ -105,8 +105,32 @@ public class AdminService implements UserDetailsService {
             if (user.isEmpty()) {
                 throw new NotFoundException("User with id " + userId + " not found");
             }
+            if (user.get().isNew() == false) {
+                throw new AlreadyException("User with id " + userId + " has balance already set");
+            }
             user.get().setBalance(balance);
             user.get().setNew(false);
+            userRepository.save(user.get());
+            return user.get();
+        } catch (Exception e) {
+            System.out.println("Error: " + e);
+            throw e;
+        }
+    }
+
+    public User manageUserBalance(Long userId, Long amount) throws NotFoundException {
+        try {
+            Optional<User> user = userRepository.findById(userId);
+            if (user.isEmpty()) {
+                throw new NotFoundException("User with id " + userId + " not found");
+            }
+            if (user.get().isNew() == true) {
+                throw new AlreadyException("User with id " + userId + " has to set initial balance first");
+            }
+            if (amount < 0 && user.get().getBalance() + amount < 0) {
+                throw new AlreadyException("User with id " + userId + " has not enough money, go to loan instead");
+            }
+            user.get().setBalance(user.get().getBalance() + amount);
             userRepository.save(user.get());
             return user.get();
         } catch (Exception e) {

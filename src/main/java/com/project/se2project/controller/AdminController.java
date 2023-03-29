@@ -1,9 +1,6 @@
 package com.project.se2project.controller;
 
-import com.project.se2project.domain.Admin.AdminSetBalanceResponse;
-import com.project.se2project.domain.Admin.AdminSignInRequest;
-import com.project.se2project.domain.Admin.AdminSignInResponse;
-import com.project.se2project.model.Admin;
+import com.project.se2project.domain.Admin.*;
 import com.project.se2project.service.AdminService;
 import com.project.se2project.utils.JwtUtil;
 import jakarta.servlet.http.Cookie;
@@ -46,9 +43,9 @@ public class AdminController {
     }
 
     @PostMapping(value = "/{id}/setBalance")
-    public ResponseEntity<AdminSetBalanceResponse> setBalance(@PathVariable(value = "id") Long id, @RequestParam Long balance) {
+    public ResponseEntity<AdminSetBalanceResponse> setBalance(@PathVariable(value = "id") Long id, @RequestBody AdminSetBalanceRequest AdminSetBalanceRequest) {
         try {
-            adminService.setUserBalance(id, balance);
+            adminService.setUserBalance(id, AdminSetBalanceRequest.getBalance());
             AdminSetBalanceResponse adminSetBalanceResponse = new AdminSetBalanceResponse("Set balance successfully");
             return ResponseEntity.status(HttpStatus.OK).body(adminSetBalanceResponse);
         } catch (Exception e) {
@@ -57,4 +54,15 @@ public class AdminController {
         }
     }
 
+    @PostMapping(value = "/{id}/manageBalance")
+    public ResponseEntity<AdminManageBalanceResponse> manageBalance(@PathVariable(value = "id") Long id, @RequestBody AdminManageBalanceRequest AdminManageBalanceRequest) {
+        try {
+            adminService.manageUserBalance(id, AdminManageBalanceRequest.getAmount());
+            AdminManageBalanceResponse adminManageBalanceResponse = new AdminManageBalanceResponse("Manage balance successfully");
+            return ResponseEntity.status(HttpStatus.OK).body(adminManageBalanceResponse);
+        } catch (Exception e) {
+            AdminManageBalanceResponse adminManageBalanceResponse = new AdminManageBalanceResponse(e.getMessage());
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(adminManageBalanceResponse);
+        }
+    }
 }
