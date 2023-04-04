@@ -10,18 +10,15 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.ui.Model;
-import org.springframework.validation.Errors;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 import static com.project.se2project.constant.SecurityConstant.COOKIE_EXPIRIED;
 
 @RestController
+@CrossOrigin(origins = "http://localhost:8081", allowCredentials = "true")
 @RequestMapping(value = "/user/")
 public class UserController {
     @Autowired
@@ -60,7 +57,10 @@ public class UserController {
     public ResponseEntity<UserSignInResponse> signin(@Valid @RequestBody UserSignInRequest userSignInRequest, HttpServletResponse response) {
         try {
             String jwt = userService.signIn(userSignInRequest.getUsername(), userSignInRequest.getPassword());
-            UserSignInResponse userSignInResponse = new UserSignInResponse(jwt, "Signin successful");
+
+            boolean isAdmin = userService.isAdmin(userSignInRequest.getUsername());
+
+            UserSignInResponse userSignInResponse = new UserSignInResponse(jwt, "Signin successful", isAdmin);
 
             Cookie cookie = new Cookie("jwt", jwt);
             cookie.setPath("/");
@@ -123,6 +123,16 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.OK).body(new GetUserResponse(user));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Error(e.getMessage()));
+        }
+    }
+
+    @PostMapping(value = "/isadmin")
+    public ResponseEntity<UserIsAdminResponse> isAdmin(@CookieValue(name = "jwt", defaultValue = "dark") String jwt) {
+        try {
+            boolean isAdmin = userService.isAdminJwtCheck(jwt);
+            return ResponseEntity.status(HttpStatus.OK).body(new UserIsAdminResponse(isAdmin));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.OK).body(new UserIsAdminResponse(e.getMessage()));
         }
     }
 }

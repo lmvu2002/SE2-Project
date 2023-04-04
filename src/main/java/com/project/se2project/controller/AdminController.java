@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import static com.project.se2project.constant.SecurityConstant.COOKIE_EXPIRIED;
 
 @RestController
+@CrossOrigin(origins = "http://localhost:8081", allowCredentials = "true")
 @RequestMapping(value = "/admin/")
 public class AdminController {
     @Autowired
@@ -21,26 +22,6 @@ public class AdminController {
 
     @Autowired
     private JwtUtil jwtUtil;
-
-    @PostMapping(value = "/signin")
-    public ResponseEntity<AdminSignInResponse> signin(@Valid @RequestBody AdminSignInRequest adminSignInRequest, HttpServletResponse response) {
-        try {
-            String jwt = adminService.signIn(adminSignInRequest.getName(), adminSignInRequest.getPassword());
-            AdminSignInResponse adminSignInResponse = new AdminSignInResponse(jwt, "Đăng nhập thành công");
-
-            Cookie cookie = new Cookie("jwt", jwt);
-            cookie.setPath("/");
-            cookie.setMaxAge(COOKIE_EXPIRIED);
-
-            response.addCookie(cookie);
-
-            return ResponseEntity.status(HttpStatus.OK).body(adminSignInResponse);
-
-        } catch (Exception e) {
-            AdminSignInResponse adminSignInResponse = new AdminSignInResponse(e.getMessage());
-            return ResponseEntity.status(HttpStatus.CONFLICT).body(adminSignInResponse);
-        }
-    }
 
     @PostMapping(value = "/{id}/setBalance")
     public ResponseEntity<AdminSetBalanceResponse> setBalance(@PathVariable(value = "id") Long id, @RequestBody AdminSetBalanceRequest AdminSetBalanceRequest) {

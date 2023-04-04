@@ -66,8 +66,18 @@ public class UserService {
 
     public String signIn(String username, String password) {
         User user = userRepository.findByUsername(username);
+        Admin admin = adminRepository.findByName(username);
+
         if (user == null) {
-            throw new AuthException("Wrong password or username");
+            if (admin == null) {
+                throw new AuthException("Wrong password or username");
+            }
+
+            if (!passwordEncoder.matches(password, admin.getPassword())) {
+                throw new AuthException("Wrong password or username");
+            }
+
+            return jwtUtil.generateToken(admin);
         }
 
         if (!passwordEncoder.matches(password, user.getPassword())) {
@@ -75,6 +85,12 @@ public class UserService {
         }
 
         return jwtUtil.generateToken(user);
+
+    }
+
+    public boolean isAdmin(String username) {
+        Admin admin = adminRepository.findByName(username);
+        return admin != null;
     }
 
     public void deleteUser(long userId, String jwt) throws NotFoundException {
@@ -94,6 +110,7 @@ public class UserService {
 
         return userRepository.findAll();
     }
+
 
     public User getUserById(long id, String jwt) throws NotFoundException {
         if (!jwtUtil.validateToken(jwt)) {
@@ -137,5 +154,14 @@ public class UserService {
         if (admin == null) {
             throw new AuthException("Invalid Admin");
         }
+    }
+
+    public boolean isAdminJwtCheck(String jwt) {
+        if (!jwtUtil.validateToken(jwt)) {
+            throw new AuthException("Invalid token");
+        }
+        Admin admin = adminRepository.findByName(jwtUtil.getUsernameFromJWT(jwt));
+
+        return admin != null;
     }
 }
