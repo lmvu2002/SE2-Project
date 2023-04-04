@@ -5,6 +5,7 @@ import com.project.se2project.model.User;
 import java.io.Serializable;
 
 public class GetUserResponse implements Serializable {
+    private String name;
     private String username;
 
     private String dob;
@@ -19,6 +20,7 @@ public class GetUserResponse implements Serializable {
     }
 
     public GetUserResponse(User user) {
+        this.name = user.getName();
         this.username = user.getUsername();
         this.dob = user.getDob();
         this.type = user.getType();
@@ -64,5 +66,13 @@ public class GetUserResponse implements Serializable {
 
     public void setStartingDate(String startingDate) {
         this.startingDate = startingDate;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 }
