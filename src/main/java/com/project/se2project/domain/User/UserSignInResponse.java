@@ -6,12 +6,15 @@ public class UserSignInResponse implements Serializable {
     private String jwt;
     private String message;
 
+    private boolean isAdmin;
+
     public UserSignInResponse() {
     }
 
-    public UserSignInResponse(String jwt, String message) {
+    public UserSignInResponse(String jwt, String message, boolean isAdmin) {
         this.jwt = jwt;
         this.message = message;
+        this.isAdmin = isAdmin;
     }
 
     public UserSignInResponse(String message) {
@@ -33,5 +36,9 @@ public class UserSignInResponse implements Serializable {
 
     public void setMessage(String message) {
         this.message = message;
+    }
+
+    public boolean isAdmin() {
+        return isAdmin;
     }
 }
