@@ -10,11 +10,12 @@ public class GetUserResponse implements Serializable {
 
     private String dob;
 
-    private String type;
+    private boolean isNew;
 
     private long balance;
 
     private String startingDate;
+    private Long id;
 
     public GetUserResponse() {
     }
@@ -23,9 +24,27 @@ public class GetUserResponse implements Serializable {
         this.name = user.getName();
         this.username = user.getUsername();
         this.dob = user.getDob();
-        this.type = user.getType();
+        this.isNew = user.isNew();
         this.balance = user.getBalance();
         this.startingDate = user.getStartingDate();
+        this.id = user.getId();
+    }
+
+
+    public boolean isNew() {
+        return isNew;
+    }
+
+    public void setNew(boolean aNew) {
+        isNew = aNew;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getUsername() {
@@ -44,13 +63,6 @@ public class GetUserResponse implements Serializable {
         this.dob = dob;
     }
 
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
-    }
 
     public long getBalance() {
         return balance;
