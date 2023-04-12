@@ -137,7 +137,9 @@ public class UserService {
 
         currentUser.get().setDob(updateUserRequest.getDob());
         currentUser.get().setBalance(updateUserRequest.getBalance());
-        currentUser.get().setType(updateUserRequest.getType());
+        currentUser.get().setNew(updateUserRequest.isNew());
+        currentUser.get().setUsername(updateUserRequest.getPhone());
+        currentUser.get().setName(updateUserRequest.getName());
 
         userRepository.save(currentUser.get());
 

@@ -5,7 +5,6 @@ import java.io.Serializable;
 public class UserSignInResponse implements Serializable {
     private String jwt;
     private String message;
-
     private boolean isAdmin;
 
     public UserSignInResponse() {
@@ -21,7 +20,6 @@ public class UserSignInResponse implements Serializable {
         this.message = message;
         this.jwt = "";
     }
-
     public String getJwt() {
         return jwt;
     }

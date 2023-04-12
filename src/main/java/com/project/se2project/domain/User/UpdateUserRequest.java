@@ -21,15 +21,26 @@ public class UpdateUserRequest implements Serializable {
     @NotBlank(message = "User type cannot be blank")
     private String type;
 
+    private String name;
+
     public UpdateUserRequest() {
     }
 
-    public UpdateUserRequest(long balance, String dob, boolean isNew, String phone, String type) {
+    public UpdateUserRequest(long balance, String dob, boolean isNew, String phone, String type, String name) {
         this.balance = balance;
         this.dob = dob;
         this.isNew = isNew;
         this.phone = phone;
         this.type = type;
+        this.name = name;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public long getBalance() {
