@@ -3,20 +3,25 @@ package com.project.se2project.service;
 import com.project.se2project.custom_exception.AuthException;
 import com.project.se2project.model.Admin;
 import com.project.se2project.model.Transaction;
+import com.project.se2project.model.User;
 import com.project.se2project.repository.AdminRepository;
 import com.project.se2project.repository.TransactionRepository;
 import com.project.se2project.utils.JwtUtil;
+import javassist.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @Service
 public class TransactionService {
     @Autowired
     private JwtUtil jwtUtil;
+
+    private UserService userService;
 
     @Autowired
     private AdminRepository adminRepository;
@@ -44,6 +49,11 @@ public class TransactionService {
             transactionPage.add(transactionRepository.findById(transactions.get(i).getTransactionId()).get());
         }
         return transactionPage;
+    }
+
+    public List<Transaction> getAllTransactionsByUserId(long id, String jwt) throws NotFoundException {
+        isAdminJwt(jwt);
+        return transactionRepository.findAllByFromUserId(id);
     }
 
     private void isAdminJwt(String jwt) {
