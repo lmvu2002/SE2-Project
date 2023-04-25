@@ -6,6 +6,7 @@ import com.project.se2project.domain.User.UpdateUserRequest;
 import com.project.se2project.model.Admin;
 import com.project.se2project.model.User;
 import com.project.se2project.repository.AdminRepository;
+import com.project.se2project.repository.TransactionRepository;
 import com.project.se2project.repository.UserRepository;
 import com.project.se2project.utils.JwtUtil;
 import javassist.NotFoundException;
@@ -31,6 +32,9 @@ public class UserService {
 
     @Autowired
     private AdminRepository adminRepository;
+
+    @Autowired
+    private TransactionRepository transactionRepository;
 
     public User loadUserByUsername(String username) {
         return userRepository.findByUsername(username);
@@ -114,11 +118,12 @@ public class UserService {
 
     public User getUserById(long id, String jwt) throws NotFoundException {
         if (!jwtUtil.validateToken(jwt)) {
+            System.out.println("Invalid token");
             throw new AuthException("Invalid token");
         }
-
+        System.out.println("Get User By Id");
         Optional<User> user = userRepository.findById(id);
-
+        System.out.println(user.get().getName());
         if (user.isEmpty()) {
             throw new NotFoundException("User not found!");
         }

@@ -61,6 +61,10 @@ public class JwtUtil {
     }
 
     public String getUsernameFromJWT(String token) {
+        System.out.println("Username:"+Jwts.parser()
+                .setSigningKey(SECRET_KEY_JWT)
+                .parseClaimsJws(token)
+                .getBody().getSubject());
         return Jwts.parser()
                 .setSigningKey(SECRET_KEY_JWT)
                 .parseClaimsJws(token)
