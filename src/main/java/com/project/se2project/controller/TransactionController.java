@@ -9,7 +9,6 @@ import org.springframework.http.ResponseEntity;
 import com.project.se2project.domain.Transaction.CreateTransactionRequest;
 import com.project.se2project.model.Transaction;
 import com.project.se2project.service.TransactionService;
-import com.project.se2project.utils.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -47,9 +46,9 @@ public class TransactionController {
         try {
             Transaction transaction = transactionService.getTransactionById(id, jwt);
             GetTransactionResponse getTransactionResponse = new GetTransactionResponse(transaction);
-            return ResponseEntity.status(HttpStatus.OK).body(getTransactionResponse);
+            return ResponseEntity.status(HttpStatus.OK).body(new GetTransactionResponse(transaction));
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body(new GetTransactionResponse(null));
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(new GetTransactionResponse(e.getMessage()));
         }
     }
 
@@ -84,8 +83,11 @@ public class TransactionController {
         }
     }
 
-    public ResponseEntity<GetAllTransactionResponse> getAllTransactionsByUserId(@PathVariable int userId, @CookieValue(name = "jwt", defaultValue = "dark") String jwt) {
+    @GetMapping(value = "/user/{username}")
+    public ResponseEntity<GetAllTransactionResponse> getAllTransactionsByUsername(@PathVariable String username, @CookieValue(name = "jwt", defaultValue = "dark") String jwt) {
         try {
+
+            Long userId = transactionService.getUserIdByUsername(username);
             List<Transaction> transactionList = transactionService.getAllTransactionsByUserId(userId, jwt);
             List<GetTransactionResponse> getTransactionResponseList = new ArrayList<>();
             transactionList.forEach(transaction -> {
