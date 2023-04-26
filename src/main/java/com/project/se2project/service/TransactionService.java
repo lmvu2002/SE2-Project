@@ -55,6 +55,11 @@ public class TransactionService {
 
     }
 
+    public Transaction getTransactionById(long id, String jwt) throws NotFoundException {
+            return transactionRepository.findById(id).get();
+    }
+
+
     public List<Transaction> getAllTransactions(String jwt) {
         return transactionRepository.findAll();
 

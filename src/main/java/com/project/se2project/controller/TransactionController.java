@@ -42,6 +42,17 @@ public class TransactionController {
         }
     }
 
+    @GetMapping(value = "/get/{id}")
+    public ResponseEntity<GetTransactionResponse> getTransaction(@CookieValue(name = "jwt", defaultValue = "dark") String jwt, @PathVariable int id) {
+        try {
+            Transaction transaction = transactionService.getTransactionById(id, jwt);
+            GetTransactionResponse getTransactionResponse = new GetTransactionResponse(transaction);
+            return ResponseEntity.status(HttpStatus.OK).body(getTransactionResponse);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(new GetTransactionResponse(null));
+        }
+    }
+
     @GetMapping(value = "/all")
     public ResponseEntity<GetAllTransactionResponse> getAllTransactions(@CookieValue(name = "jwt", defaultValue = "dark") String jwt) {
         try {
