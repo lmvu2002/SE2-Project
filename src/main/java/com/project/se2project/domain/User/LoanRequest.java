@@ -1,32 +1,45 @@
 package com.project.se2project.domain.User;
 
-import java.time.LocalDate;
+import com.project.se2project.model.Loan;
+import com.project.se2project.model.User;
 
-public class LoanRequest {
-    private Long user;
+
+import java.io.Serializable;
+
+public class LoanRequest implements Serializable {
+
+    private Long id;
+
+    private User user;
+
     private Long inMoney;
 
-    private LocalDate startDate;
+    private String startDate;
+
+    private int duration;
 
     private Long rate;
 
     private Long totalMoney;
+
+    public LoanRequest(Loan loan) {
+        this.user = loan.getUser();
+        this.inMoney = loan.getInMoney();
+        this.startDate = loan.getStartDate();
+        this.duration = loan.getDuration();
+        this.rate = loan.getRate();
+        this.totalMoney = loan.getTotalMoney();
+    }
+
     public LoanRequest() {
+
     }
 
-    public LoanRequest(Long user, Long inMoney, LocalDate startDate, Long rate, Long totalMoney) {
-        this.user = user;
-        this.inMoney = inMoney;
-        this.startDate = startDate;
-        this.rate = rate;
-        this.totalMoney = totalMoney;
-    }
-
-    public Long getUser() {
+    public User getUser() {
         return user;
     }
 
-    public void setUser(Long user) {
+    public void setUser(User user) {
         this.user = user;
     }
 
@@ -38,11 +51,11 @@ public class LoanRequest {
         this.inMoney = inMoney;
     }
 
-    public LocalDate getStartDate() {
+    public String getStartDate() {
         return startDate;
     }
 
-    public void setStartDate(LocalDate startDate) {
+    public void setStartDate(String startDate) {
         this.startDate = startDate;
     }
 
@@ -54,11 +67,28 @@ public class LoanRequest {
         this.rate = rate;
     }
 
+    public int getDuration() {
+        return duration;
+    }
+
+    public void setDuration(int duration) {
+        this.duration = duration;
+    }
+
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
     public Long getTotalMoney() {
         return totalMoney;
     }
 
     public void setTotalMoney(Long totalMoney) {
-        this.totalMoney = totalMoney;
-    }
+        this.totalMoney = totalMoney;}
+
 }
