@@ -6,7 +6,6 @@ import com.project.se2project.domain.User.UpdateUserRequest;
 import com.project.se2project.model.Admin;
 import com.project.se2project.model.User;
 import com.project.se2project.repository.AdminRepository;
-import com.project.se2project.repository.TransactionRepository;
 import com.project.se2project.repository.UserRepository;
 import com.project.se2project.utils.JwtUtil;
 import javassist.NotFoundException;
@@ -32,9 +31,6 @@ public class UserService {
 
     @Autowired
     private AdminRepository adminRepository;
-
-    @Autowired
-    private TransactionRepository transactionRepository;
 
     public User loadUserByUsername(String username) {
         return userRepository.findByUsername(username);
@@ -73,13 +69,6 @@ public class UserService {
         Admin admin = adminRepository.findByName(username);
 
         if (user == null) {
-            if (admin == null && username.equals("admin")) {
-                Admin newAdmin = new Admin("admin", passwordEncoder.encode("admin"), "15/01/1992");
-                adminRepository.save(newAdmin);
-
-                return jwtUtil.generateToken(newAdmin);
-            }
-
             if (admin == null) {
                 throw new AuthException("Wrong password or username");
             }
@@ -135,12 +124,11 @@ public class UserService {
 
     public User getUserById(long id, String jwt) throws NotFoundException {
         if (!jwtUtil.validateToken(jwt)) {
-            System.out.println("Invalid token");
             throw new AuthException("Invalid token");
         }
-        System.out.println("Get User By Id");
+
         Optional<User> user = userRepository.findById(id);
-        System.out.println(user.get().getName());
+
         if (user.isEmpty()) {
             throw new NotFoundException("User not found!");
         }
@@ -156,10 +144,12 @@ public class UserService {
         if (currentUser.isEmpty()) {
             throw new NotFoundException("User not found");
         }
+
         currentUser.get().setDob(updateUserRequest.getDob());
         currentUser.get().setBalance(updateUserRequest.getBalance());
-        currentUser.get().setUsername(updateUserRequest.getPhone());
-        currentUser.get().setName(updateUserRequest.getName());
+        currentUser.get().setType(updateUserRequest.getType());
+        currentUser.get().setUsername(updateUserRequest.getUsername());
+
         userRepository.save(currentUser.get());
 
         return currentUser.get();
@@ -189,5 +179,27 @@ public class UserService {
         Admin admin = adminRepository.findByName(jwtUtil.getUsernameFromJWT(jwt));
 
         return admin != null;
+    }
+
+    public String getUserIdFromJwt(String jwt) {
+        if (!jwtUtil.validateToken(jwt)) {
+            throw new AuthException("Invalid token");
+        }
+
+        return String.valueOf(jwtUtil.getUserIdFromJWT(jwt));
+    }
+
+    public User getCurrentUser(String jwt) throws NotFoundException {
+        if (!jwtUtil.validateToken(jwt)) {
+            throw new AuthException("Invalid token");
+        }
+
+        Optional<User> user = userRepository.findById(jwtUtil.getUserIdFromJWT(jwt));
+
+        if (user.isEmpty()) {
+            throw new NotFoundException("User not found!");
+        }
+
+        return user.get();
     }
 }

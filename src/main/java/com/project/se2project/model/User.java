@@ -130,4 +130,8 @@ public class User {
     public void setStartingDate(String startingDate) {
         this.startingDate = startingDate;
     }
+
+    public User get() {
+        return this;
+    }
 }
