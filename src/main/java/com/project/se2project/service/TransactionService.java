@@ -104,6 +104,11 @@ public class TransactionService {
         return userRepository.findById(id).orElseThrow(() -> new UsernameNotFoundException("User not found with id : " + id));
     }
 
+    public Long getUserIdByUsername(String username) {
+        System.out.println("User:"+userRepository.findByUsername(username));
+        return userRepository.findByUsername(username).getId();
+    }
+
 
 //    private void isAdminJwt(String jwt) {
 //        if (!jwtUtil.validateToken(jwt)) {

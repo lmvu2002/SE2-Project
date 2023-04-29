@@ -17,12 +17,17 @@ public class GetTransactionResponse implements Serializable {
 
     private String transactionTime;
 
+    private String text;
     public GetTransactionResponse(Transaction transaction) {
         this.transactionId = transaction.getTransactionId();
         this.fromUserId = transaction.getFromUserId();
         this.toUserId = transaction.getToUserId();
         this.amount = transaction.getAmount();
         this.transactionTime = transaction.getTransactionTime();
+    }
+
+    public GetTransactionResponse(String text) {
+        this.text = text;
     }
 
     public Long getTransactionId() {
