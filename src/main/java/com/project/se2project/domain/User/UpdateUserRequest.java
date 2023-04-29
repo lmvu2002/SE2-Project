@@ -13,11 +13,8 @@ public class UpdateUserRequest implements Serializable {
     @NotBlank(message = "User DOB cannot be blank")
     private String dob;
 
-
     @NotBlank(message = "User phone cannot be blank")
     private String phone;
-
-
     private String name;
 
     public UpdateUserRequest() {
@@ -26,9 +23,7 @@ public class UpdateUserRequest implements Serializable {
     public UpdateUserRequest(long balance, String dob, String phone, String name) {
         this.balance = balance;
         this.dob = dob;
-
         this.phone = phone;
-
         this.name = name;
     }
 
