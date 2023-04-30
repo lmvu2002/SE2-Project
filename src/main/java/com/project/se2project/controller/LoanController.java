@@ -1,6 +1,9 @@
 package com.project.se2project.controller;
 
-import com.project.se2project.domain.User.*;
+import com.project.se2project.domain.Loan.GetAllLoanResponse;
+import com.project.se2project.domain.Loan.GetLoanResponse;
+import com.project.se2project.domain.Loan.LoanRequest;
+import com.project.se2project.domain.Loan.LoanResponse;
 import com.project.se2project.model.Loan;
 import com.project.se2project.model.User;
 import com.project.se2project.repository.LoanRepository;
@@ -9,8 +12,6 @@ import com.project.se2project.service.LoanService;
 import com.project.se2project.service.UserService;
 import com.project.se2project.service.AdminService;
 import com.project.se2project.utils.JwtUtil;
-import jakarta.servlet.http.Cookie;
-import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import javassist.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,9 +24,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
-import static com.project.se2project.constant.SecurityConstant.COOKIE_EXPIRIED;
 import static java.lang.Long.parseLong;
 
 @RestController
@@ -52,16 +51,11 @@ public class LoanController {
     private JwtUtil jwtUtil;
 
     @PostMapping(value = "/loan")
-    public ResponseEntity<?> makeLoan(@Valid @RequestBody LoanRequest loanRequest,@CookieValue(name = "jwt", defaultValue = "dark") String jwt) throws NotFoundException {
+    public ResponseEntity<?> makeLoan(@Valid @RequestBody LoanRequest loanRequest, @CookieValue(name = "jwt", defaultValue = "dark") String jwt) throws NotFoundException {
         JwtUtil jwtUtil = new JwtUtil();
 
-        String newJwt = jwt.replace("Bearer ", "");
-
-//        Optional<User> optionalUser  = userRepository.findById(jwtUtil.getUserIdFromJWT(jwt));
         long userId = jwtUtil.getUserIdFromJWT(jwt);
-//        System.out.println("userId: " + userId);
         User user = userRepository.findByUsername("0" + String.valueOf(userId)).get();
-
 
         long inMoney = loanRequest.getInMoney();
         long rate = loanRequest.getRate();
