@@ -25,7 +25,7 @@ public class Loan {
         this.id = random.nextLong(90000) + 10000;
     }
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
@@ -125,18 +125,30 @@ public class Loan {
 
     public void setTotalMoney(long inMoney, long rate, int duration) {
         double interest = rate / 100.0;
-        double monthlyPayment = (inMoney * interest) / (1 - Math.pow(1 + interest, -duration));
-        double balance = inMoney;
-        double totalPayment = 0.0;
-        for (int i = 1; i <= duration; i++) {
-            double allInterest = balance * interest;
-            double principal = monthlyPayment - allInterest;
-            balance -= principal;
-            totalPayment += monthlyPayment;
+        //the money have to pay every month
+        double principalPayPerMonth = inMoney / duration;
+        //the first month interest
+        double firstInterest = (inMoney * interest) / duration;
+        //from 2nd month
+        double totalInterest = firstInterest;
+        double currentLoan = inMoney - principalPayPerMonth;
+        for (int i = 1; i < duration; i++) {
+            totalInterest += (currentLoan * interest) / duration;
+            currentLoan -= principalPayPerMonth;
         }
+        // return total payment amount
+        double totalPayment = inMoney + totalInterest;
+//        double monthlyPayment = (inMoney * interest) / (1 - Math.pow(1 + interest, -duration));
+//        double balance = inMoney;
+//        double totalPayment = 0.0;
+//        for (int i = 1; i <= duration; i++) {
+//            double allInterest = balance * interest;
+//            double principal = monthlyPayment - allInterest;
+//            balance -= principal;
+//            totalPayment += monthlyPayment;
+//        }
         this.totalMoney = Math.round(totalPayment);
     }
-
     public void setTotalMoney(long totalMoney) {
         this.totalMoney = totalMoney;
     }
@@ -169,18 +181,34 @@ public class Loan {
         return nextPayment;
     }
 
-    public void setNextPayment(long loanAmount, long rate, int duration) {
+    public void setNextPayment(long money, long rate, int duration) {
+
+        double nextPayment = 0;
+
         double interest = rate / 100.0;
-        double numerator = loanAmount * interest;
-        double denominator = 1 - Math.pow(1 + interest, -duration);
-
-        double nextPayment = numerator / denominator;
-
-        // Round the result to the nearest cent
-        nextPayment = Math.round(nextPayment * 100.0) / 100.0;
-
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        LocalDate formattedStartDate = LocalDate.parse(startDate, dtf);
+        LocalDate next = formattedStartDate.plusMonths(1);
+        double principalPayPerMonth = inMoney / duration;
+        if (this.nextPaymentDate == next.format(dtf)) {
+            nextPayment = principalPayPerMonth + (inMoney * interest) / duration;
+        } else {
+            nextPayment = principalPayPerMonth + (money * interest) / duration;
+        }
         // Cast the result to a long
         this.nextPayment = (long) nextPayment;
+
+//        double interest = rate / 100.0;
+//        //the money have to pay every month
+//        double principalPayPerMonth = inMoney / duration;
+//        //the first month interest
+//        double firstInterest = (inMoney * interest) / duration;
+//        //from 2nd month
+//        double totalInterest = firstInterest;
+//        double currentLoan = inMoney - principalPayPerMonth;
+//        for (int i = 1; i < duration; i++) {
+//            totalInterest += (currentLoan * interest) / duration;
+//            currentLoan -= principalPayPerMonth;
     }
 
     public void setNextPayment(long nextPayment) {

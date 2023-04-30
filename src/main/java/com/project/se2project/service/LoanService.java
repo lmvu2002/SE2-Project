@@ -1,7 +1,6 @@
 package com.project.se2project.service;
 
 import com.auth0.jwt.JWT;
-import com.project.se2project.domain.User.LoanRequest;
 import com.project.se2project.model.Loan;
 import com.project.se2project.model.User;
 import com.project.se2project.repository.LoanRepository;
@@ -48,7 +47,7 @@ public class LoanService {
         loanRepository.save(loan);
         return loan;
     }
-    public Loan updateLoan (long id, long rate, String jwt) throws Exception {
+    public void updateLoan (long id, long rate, String jwt) throws Exception {
         if (!userService.isAdminJwtCheck(jwt)) {
             throw new Exception("You are not admin");
         } else {
@@ -60,7 +59,6 @@ public class LoanService {
             loan.setTotalMoney(loan.getInMoney(), rate, loan.getDuration());
             loan.setNextPayment(loan.getInMoney(), rate, loan.getDuration());
             loanRepository.save(loan);
-            return loan;
         }
     }
 

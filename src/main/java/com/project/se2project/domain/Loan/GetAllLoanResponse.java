@@ -1,4 +1,4 @@
-package com.project.se2project.domain.User;
+package com.project.se2project.domain.Loan;
 
 import java.io.Serializable;
 import java.util.List;
