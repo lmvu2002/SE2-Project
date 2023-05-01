@@ -27,12 +27,17 @@ public class TransactionController {
     public ResponseEntity<CreateTransactionResponse> createTransaction(@CookieValue(name = "jwt", defaultValue = "dark") String jwt, @Valid @RequestBody CreateTransactionRequest createTransactionRequest) {
         try {
             System.out.println(jwt);
-            System.out.println(createTransactionRequest.getFromUserId());
-            System.out.println(createTransactionRequest.getToUserId());
+            System.out.println(createTransactionRequest.getFromUserUsername());
+            System.out.println(createTransactionRequest.getToUserUsername());
             System.out.println(createTransactionRequest.getAmount());
             System.out.println(createTransactionRequest.getTransactionTime());
-            Transaction transaction = transactionService.createTransaction(createTransactionRequest.getFromUserId(), createTransactionRequest.getToUserId(), createTransactionRequest.getAmount(),createTransactionRequest.getTransactionTime(), jwt);
-            System.out.println(transaction);
+            Long toUserId = transactionService.getIdByUsername(createTransactionRequest.getToUserUsername());
+            Long fromUserId = transactionService.getIdByUsername(createTransactionRequest.getFromUserUsername());
+            if (toUserId == null || fromUserId == null) {
+                throw new Exception("User not found");
+            }
+            Transaction transaction = transactionService.createTransaction(toUserId, fromUserId, createTransactionRequest.getAmount(),createTransactionRequest.getTransactionTime(), jwt);
+
             CreateTransactionResponse createTransactionResponse = new CreateTransactionResponse("Create transaction successfully");
             return ResponseEntity.status(HttpStatus.OK).body(createTransactionResponse);
         } catch (Exception e) {
