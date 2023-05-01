@@ -70,19 +70,23 @@ public class SavingController {
         long money = savingRequest.getMoney();
         String startDate = savingRequest.getStartDate();
         long rate = savingRequest.getRate();
-
-        try {
-            Saving saving = savingService.makeSaving(
-                    user,
-                    money,
-                    startDate,
-                    rate,
-                    jwt);
-            return ResponseEntity.status(HttpStatus.OK).body(new GetSavingResponse(saving));
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Error(e.getMessage()));
+        if(money >= user.getBalance()){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Error("Not enough money"));
+        } else {
+            try {
+                Saving saving = savingService.makeSaving(
+                        user,
+                        money,
+                        startDate,
+                        rate,
+                        jwt);
+                return ResponseEntity.status(HttpStatus.OK).body(new GetSavingResponse(saving));
+            } catch (Exception e) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Error(e.getMessage()));
+            }
         }
     }
+
 
     @GetMapping(value = "/user/savings")
     public ResponseEntity<?> getUserSaving(@CookieValue(name = "jwt", defaultValue = "dark") String jwt) {
