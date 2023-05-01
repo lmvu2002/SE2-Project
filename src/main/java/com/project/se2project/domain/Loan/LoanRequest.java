@@ -10,7 +10,7 @@ public class LoanRequest implements Serializable {
 
     private Long id;
 
-    private User user;
+    private String username;
 
     private Long inMoney;
 
@@ -23,7 +23,8 @@ public class LoanRequest implements Serializable {
     private Long totalMoney;
 
     public LoanRequest(Loan loan) {
-        this.user = loan.getUser();
+        this.id = loan.getId();
+        this.username = loan.getUser().getUsername();
         this.inMoney = loan.getInMoney();
         this.startDate = loan.getStartDate();
         this.duration = loan.getDuration();
@@ -35,12 +36,13 @@ public class LoanRequest implements Serializable {
 
     }
 
-    public User getUser() {
-        return user;
+
+    public String getUsername() {
+        return username;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public Long getInMoney() {
