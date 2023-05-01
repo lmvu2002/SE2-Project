@@ -139,7 +139,7 @@ public class LoanController {
     @GetMapping(value = "/loan/{id}")
     public ResponseEntity<?> getLoanById(@PathVariable("id") long id, @CookieValue(name = "jwt", defaultValue = "dark") String jwt) throws NotFoundException {
         try {
-            Loan loan = loanService.find(id);
+            Loan loan = loanService.findLoanByUserId(id);
             return ResponseEntity.status(HttpStatus.OK).body(new GetLoanResponse(loan));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Error(e.getMessage()));
