@@ -95,8 +95,12 @@ public class TransactionService {
 
     }
 
-    private User getUserById(Long id) {
+    public User getUserById(Long id) {
         return userRepository.findById(id).orElseThrow(() -> new UsernameNotFoundException("User not found with id : " + id));
+    }
+
+    public Long getIdByUsername(String username) {
+        return userRepository.findByUsername(username).getId();
     }
 
 

@@ -135,4 +135,14 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.OK).body(new UserIsAdminResponse(e.getMessage()));
         }
     }
+
+    @GetMapping(value = "/getuser/{username}")
+    public ResponseEntity<GetNameResponse> getNameByUsername(@PathVariable String username) {
+        try {
+            String name = userService.getNameByUsername(username);
+            return ResponseEntity.status(HttpStatus.OK).body(new GetNameResponse(name));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(new GetNameResponse());
+        }
+    }
 }
