@@ -115,6 +115,16 @@ public class UserService {
         return userRepository.findAll();
     }
 
+    public User getUserByUsername(String username) throws NotFoundException {
+        Optional<User> user = Optional.ofNullable(userRepository.findByUsername(username));
+
+        if (user.isEmpty()) {
+            throw new NotFoundException("User not found!");
+        }
+
+        return user.get();
+    }
+
 
     public User getUserById(long id, String jwt) throws NotFoundException {
         if (!jwtUtil.validateToken(jwt)) {

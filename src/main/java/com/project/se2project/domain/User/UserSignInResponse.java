@@ -7,19 +7,23 @@ public class UserSignInResponse implements Serializable {
     private String message;
     private boolean isAdmin;
 
+    private long id;
+
     public UserSignInResponse() {
     }
 
-    public UserSignInResponse(String jwt, String message, boolean isAdmin) {
+    public UserSignInResponse(long id, String jwt, String message, boolean isAdmin) {
         this.jwt = jwt;
         this.message = message;
         this.isAdmin = isAdmin;
+        this.id = id;
     }
 
     public UserSignInResponse(String message) {
         this.message = message;
         this.jwt = "";
     }
+
     public String getJwt() {
         return jwt;
     }
@@ -38,5 +42,17 @@ public class UserSignInResponse implements Serializable {
 
     public boolean isAdmin() {
         return isAdmin;
+    }
+
+    public void setAdmin(boolean admin) {
+        isAdmin = admin;
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
     }
 }
