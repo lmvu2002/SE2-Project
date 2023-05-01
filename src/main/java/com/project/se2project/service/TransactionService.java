@@ -77,6 +77,15 @@ public class TransactionService {
 
     }
 
+    public Transaction getTransactionById(long id, String jwt) throws NotFoundException {
+        return transactionRepository.findById(id).get();
+    }
+
+    public Long getUserIdByUsername(String username) {
+        System.out.println("User:"+userRepository.findByUsername(username));
+        return userRepository.findByUsername(username).getId();
+    }
+
     public List<Transaction> getAllTransactionsByUserId(long id, String jwt) throws NotFoundException {
             List<Transaction> fromUserTransactions = transactionRepository.findAllByFromUserId(id);
             List<Transaction> toUserTransactions = transactionRepository.findAllByToUserId(id);
