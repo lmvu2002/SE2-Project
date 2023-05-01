@@ -60,7 +60,9 @@ public class UserController {
 
             boolean isAdmin = userService.isAdmin(userSignInRequest.getUsername());
 
-            UserSignInResponse userSignInResponse = new UserSignInResponse(jwt, "Signin successful", isAdmin);
+            long id = userService.getUserByUsername(userSignInRequest.getUsername()).getId();
+
+            UserSignInResponse userSignInResponse = new UserSignInResponse(id, jwt, "Signin successful", isAdmin);
 
             Cookie cookie = new Cookie("jwt", jwt);
             cookie.setPath("/");
