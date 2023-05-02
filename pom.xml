@@ -16,6 +16,7 @@
     <properties>
         <java.version>19</java.version>
     </properties>
+    <packaging>jar</packaging>
     <dependencies>
         <!-- https://mvnrepository.com/artifact/mysql/mysql-connector-java -->
         <dependency>
