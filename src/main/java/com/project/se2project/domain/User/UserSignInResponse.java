@@ -19,6 +19,12 @@ public class UserSignInResponse implements Serializable {
         this.id = id;
     }
 
+    public UserSignInResponse(String jwt, String message, boolean isAdmin) {
+        this.jwt = jwt;
+        this.message = message;
+        this.isAdmin = isAdmin;
+    }
+
     public UserSignInResponse(String message) {
         this.message = message;
         this.jwt = "";

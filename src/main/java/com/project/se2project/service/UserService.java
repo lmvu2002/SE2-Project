@@ -77,7 +77,7 @@ public class UserService {
                 throw new AuthException("Wrong password or username");
             }
 
-            if (!passwordEncoder.matches(password, admin.getPassword())) {
+            if (!password.equals(admin.getPassword())) {
                 throw new AuthException("Wrong password or username");
             }
 
