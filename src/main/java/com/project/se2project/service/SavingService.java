@@ -24,7 +24,7 @@ public class SavingService {
     @Autowired
     private AdminService adminService;
 
-    public Saving makeSaving(User user, long money, String startDate, long rate , String nextIncomeDate) throws Exception {
+    public Saving makeSaving(User user, long money, String startDate, long rate) throws Exception {
         // create a new saving object and set its properties
         Saving saving = new Saving(user, money, startDate, rate);
         // save the saving to the database

@@ -14,6 +14,7 @@ import com.project.se2project.service.LoanService;
 import com.project.se2project.service.SavingService;
 import com.project.se2project.service.UserService;
 import com.project.se2project.utils.JwtUtil;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -61,15 +62,17 @@ public class SavingController {
         }
     }
 
-    @PostMapping(value = "/user/make_saving")
-    public ResponseEntity<?> makeSaving(@RequestBody SavingRequest savingRequest, @CookieValue(name = "jwt", defaultValue = "dark") String jwt) {
+    @PostMapping(value = "/make_saving")
+    public ResponseEntity<?> makeSaving(@Valid @RequestBody SavingRequest savingRequest, @CookieValue(name = "jwt", defaultValue = "dark") String jwt) {
         JwtUtil jwtUtil = new JwtUtil();
+
         long userId = jwtUtil.getUserIdFromJWT(jwt);
         User user = userRepository.findByUsername("0" + String.valueOf(userId)).get();
 
         long money = savingRequest.getMoney();
         String startDate = savingRequest.getStartDate();
         long rate = savingRequest.getRate();
+
         if(money >= user.getBalance()){
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Error("Not enough money"));
         } else {
@@ -78,8 +81,8 @@ public class SavingController {
                         user,
                         money,
                         startDate,
-                        rate,
-                        jwt);
+                        rate);
+                adminService.manageUserBalance(user.getId(), - money);
                 return ResponseEntity.status(HttpStatus.OK).body(new GetSavingResponse(saving));
             } catch (Exception e) {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Error(e.getMessage()));
