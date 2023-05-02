@@ -26,17 +26,13 @@ public class TransactionController {
     @PostMapping(value = "/")
     public ResponseEntity<CreateTransactionResponse> createTransaction(@CookieValue(name = "jwt", defaultValue = "dark") String jwt, @Valid @RequestBody CreateTransactionRequest createTransactionRequest) {
         try {
-            System.out.println(jwt);
-            System.out.println(createTransactionRequest.getFromUserUsername());
-            System.out.println(createTransactionRequest.getToUserUsername());
-            System.out.println(createTransactionRequest.getAmount());
-            System.out.println(createTransactionRequest.getTransactionTime());
+
             Long toUserId = transactionService.getIdByUsername(createTransactionRequest.getToUserUsername());
             Long fromUserId = transactionService.getIdByUsername(createTransactionRequest.getFromUserUsername());
             if (toUserId == null || fromUserId == null) {
                 throw new Exception("User not found");
             }
-            Transaction transaction = transactionService.createTransaction(toUserId, fromUserId, createTransactionRequest.getAmount(),createTransactionRequest.getTransactionTime(), jwt);
+            Transaction transaction = transactionService.createTransaction(fromUserId, toUserId, createTransactionRequest.getAmount(),createTransactionRequest.getTransactionTime(), jwt);
 
             CreateTransactionResponse createTransactionResponse = new CreateTransactionResponse("Create transaction successfully");
             return ResponseEntity.status(HttpStatus.OK).body(createTransactionResponse);
