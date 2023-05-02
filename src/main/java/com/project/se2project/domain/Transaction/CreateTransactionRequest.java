@@ -8,10 +8,10 @@ import java.io.Serializable;
 public class CreateTransactionRequest implements Serializable {
 
     @NonNull
-    private Long fromUserId;
+    private String fromUserUsername;
 
     @NonNull
-    private Long toUserId;
+    private String toUserUsername;
 
     @NonNull
     private int amount;
@@ -22,19 +22,19 @@ public class CreateTransactionRequest implements Serializable {
 
     public CreateTransactionRequest() {
     }
-    public CreateTransactionRequest(Long fromUserId, Long toUserId, int amount, String transactionTime) {
-        this.fromUserId = fromUserId;
-        this.toUserId = toUserId;
+    public CreateTransactionRequest(String fromUserUsername, String toUserUsername, int amount, String transactionTime) {
+        this.fromUserUsername = fromUserUsername;
+        this.toUserUsername = toUserUsername;
         this.amount = amount;
         this.transactionTime = transactionTime;
     }
 
-    public Long getFromUserId() {
-        return fromUserId;
+    public String getFromUserUsername() {
+        return fromUserUsername;
     }
 
-    public Long getToUserId() {
-        return toUserId;
+    public String getToUserUsername() {
+        return toUserUsername;
     }
 
     public int getAmount() {

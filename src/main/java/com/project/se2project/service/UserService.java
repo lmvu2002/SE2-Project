@@ -158,6 +158,11 @@ public class UserService {
         return currentUser.get();
     }
 
+    public String getNameByUsername(String username) {
+        User user = userRepository.findByUsername(username);
+        return user.getName();
+    }
+
     private void isAdminJwt(String jwt) {
         if (!jwtUtil.validateToken(jwt)) {
             throw new AuthException("Invalid token");
