@@ -31,6 +31,7 @@ public class Saving {
     private String nextIncomeDate;
 
     public Saving(User user, long money, String startDate, long rate) {
+        generateId();
         this.user = user;
         this.money = money;
         this.startDate = startDate;
@@ -73,7 +74,7 @@ public class Saving {
         this.startDate = startDate;
     }
 
-    public long getRate() {
+    public Long getRate() {
         return rate;
     }
 

@@ -62,7 +62,7 @@ public class SavingRequest implements Serializable {
         this.startDate = startDate;
     }
 
-    public long getRate() {
+    public Long getRate() {
         return rate;
     }
 
