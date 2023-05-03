@@ -9,7 +9,9 @@ public class GetDepositResponse implements Serializable {
 
     private long id;
 
-    private User user;
+    private long userId;
+
+    private String userName;
 
     private long money;
 
@@ -30,7 +32,8 @@ public class GetDepositResponse implements Serializable {
 
     public GetDepositResponse(Deposit deposit) {
         this.id = deposit.getId();
-        this.user = deposit.getUser();
+        this.userId = deposit.getUser().getId();
+        this.userName = deposit.getUser().getName();
         this.money = deposit.getMoney();
         this.startDate = deposit.getStartDate();
         this.rate = deposit.getRate();
@@ -51,12 +54,28 @@ public class GetDepositResponse implements Serializable {
         this.id = id;
     }
 
-    public User getUser() {
-        return user;
+    public long getUserId() {
+        return userId;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setUserId(long userId) {
+        this.userId = userId;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
     }
 
     public long getMoney() {

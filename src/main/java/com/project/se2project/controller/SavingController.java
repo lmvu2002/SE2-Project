@@ -148,6 +148,10 @@ public class SavingController {
                                             @RequestBody Map<String, Object> requestBody,
                                             @CookieValue(name = "jwt", defaultValue = "dark") String jwt) {
         try {
+            long userId = jwtUtil.getUserIdFromJWT(jwt);
+            if (userId != savingService.findSavingById(id).getUser().getId()) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new GetSavingResponse("Not your saving"));
+            }
             long money = Long.parseLong(requestBody.get("money").toString());
             Saving saving = savingService.takeMoneyFromSaving(id, money);
             return ResponseEntity.status(HttpStatus.OK).body(new GetSavingResponse(saving));

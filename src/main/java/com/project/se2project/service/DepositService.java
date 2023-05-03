@@ -6,8 +6,6 @@ import com.project.se2project.repository.DepositRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @Service
@@ -95,10 +93,9 @@ public class DepositService {
         return deposit;
     }
 
-    public String takeMoney(long id) throws Exception {
+    public void takeMoney(long id) throws Exception {
         Deposit deposit = depositRepository.findById(id).get();
         deposit.setMoney(0);
         depositRepository.save(deposit);
-        return "Take money successfully";
     }
 }
