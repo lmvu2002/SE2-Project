@@ -7,9 +7,9 @@ public class GetAllDepositResponse implements Serializable {
 
     private String message;
 
-    private List<GetDepositRequest> allDeposit;
+    private List<GetDepositResponse> allDeposit;
 
-    public GetAllDepositResponse(List<GetDepositRequest> allDeposit) {
+    public GetAllDepositResponse(List<GetDepositResponse> allDeposit) {
         this.allDeposit = allDeposit;
         this.message = "OK";
     }
