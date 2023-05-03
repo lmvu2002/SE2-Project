@@ -5,8 +5,7 @@ import com.project.se2project.model.User;
 
 import java.io.Serializable;
 
-public class GetDepositResponse implements Serializable {
-
+public class DepositRequest implements Serializable {
     private long id;
 
     private User user;
@@ -23,12 +22,10 @@ public class GetDepositResponse implements Serializable {
 
     private long totalMoney;
 
-    private String message;
-
-    public GetDepositResponse() {
+    public DepositRequest() {
     }
 
-    public GetDepositResponse(Deposit deposit) {
+    public DepositRequest(Deposit deposit) {
         this.id = deposit.getId();
         this.user = deposit.getUser();
         this.money = deposit.getMoney();
@@ -37,10 +34,6 @@ public class GetDepositResponse implements Serializable {
         this.duration = deposit.getDuration();
         this.endDate = deposit.getEndDate();
         this.totalMoney = deposit.getTotalMoney();
-    }
-
-    public GetDepositResponse(String message) {
-        this.message = message;
     }
 
     public long getId() {
