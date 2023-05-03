@@ -15,6 +15,8 @@ public class GetSavingResponse implements Serializable {
     private long rate;
     private String nextIncomeDate;
 
+    private String message;
+
     public GetSavingResponse() {
 
     }
@@ -26,6 +28,18 @@ public class GetSavingResponse implements Serializable {
         this.startDate = saving.getStartDate();
         this.rate = saving.getRate();
         this.nextIncomeDate = saving.getNextIncomeDate();
+    }
+
+    public GetSavingResponse(String message) {
+        this.message = message;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
     }
 
     public long getId() {
