@@ -72,14 +72,16 @@ public class LoanService {
 
     public Loan findLoanByUserId(long id) throws Exception {
         User user = userRepository.findById(id).get();
+        System.out.println("user:"+user.getName());
         if (user == null) {
             throw new Exception("User not found");
         }
-        Loan loan = loanRepository.findByUser(user).get(0);
-        if (loan == null) {
-            throw new Exception("Loan not found");
+        List<Loan> loanList = loanRepository.findByUser(user);
+        if (loanList.size() == 0) {
+            return null;
+        } else {
+            return loanList.get(0);
         }
-        return loan;
     }
 
     public Loan monthlyPayment(String jwt, long payment) throws Exception {

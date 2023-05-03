@@ -190,4 +190,26 @@ public class UserService {
 
         return admin != null;
     }
+
+    public String getUserIdFromJwt(String jwt) {
+        if (!jwtUtil.validateToken(jwt)) {
+            throw new AuthException("Invalid token");
+        }
+
+        return String.valueOf(jwtUtil.getUserIdFromJWT(jwt));
+    }
+
+    public User getCurrentUser(String jwt) throws NotFoundException {
+        if (!jwtUtil.validateToken(jwt)) {
+            throw new AuthException("Invalid token");
+        }
+
+        Optional<User> user = userRepository.findById(jwtUtil.getUserIdFromJWT(jwt));
+
+        if (user.isEmpty()) {
+            throw new NotFoundException("User not found!");
+        }
+
+        return user.get();
+    }
 }
