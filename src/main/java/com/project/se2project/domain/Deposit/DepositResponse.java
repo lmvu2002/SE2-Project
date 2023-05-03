@@ -5,7 +5,9 @@ import com.project.se2project.model.User;
 public class DepositResponse {
     private long id;
 
-    private User user;
+    private long userId;
+
+    private String userName;
 
     private long money;
 
@@ -26,7 +28,8 @@ public class DepositResponse {
 
     public DepositResponse(long id, User user, long money, String startDate, long rate, int duration, String endDate, long totalMoney) {
         this.id = id;
-        this.user = user;
+        this.userId = user.getId();
+        this.userName = user.getName();
         this.money = money;
         this.startDate = startDate;
         this.rate = rate;
@@ -43,8 +46,16 @@ public class DepositResponse {
         return id;
     }
 
-    public User getUser() {
-        return user;
+    public long getUserId() {
+        return userId;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public String getMessage() {
+        return message;
     }
 
     public long getMoney() {

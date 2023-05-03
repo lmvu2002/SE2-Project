@@ -7,6 +7,9 @@ import com.project.se2project.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 
 @Service
@@ -95,7 +98,12 @@ public class SavingService {
         } if (saving.getMoney() < amount){
             throw new Exception("Not enough money");
         }
-        saving.setMoney(saving.getMoney() - amount);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        LocalDate start = LocalDate.parse(saving.getStartDate(), formatter);
+        long days = ChronoUnit.DAYS.between(start, LocalDate.now());
+        double interest = saving.getRate()/3600000.0;
+        double total = saving.getMoney()*Math.pow((1 + interest), days);
+        saving.setMoney((long) total - amount);
         if(saving.getMoney() <= 0){
             savingRepository.delete(saving);
         } else savingRepository.save(saving);
