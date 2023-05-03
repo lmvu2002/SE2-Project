@@ -86,7 +86,7 @@ public class TransactionService {
         return userRepository.findByUsername(username).getId();
     }
 
-    public List<Transaction> getAllTransactionsByUserId(long id, String jwt) throws NotFoundException {
+    public List<Transaction> getAllTransactionsByUserId(long id) throws NotFoundException {
             List<Transaction> fromUserTransactions = transactionRepository.findAllByFromUserId(id);
             List<Transaction> toUserTransactions = transactionRepository.findAllByToUserId(id);
             //merge and sort 2 lists together by transactionTime

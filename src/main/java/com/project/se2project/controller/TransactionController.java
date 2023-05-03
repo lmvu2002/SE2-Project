@@ -1,12 +1,14 @@
 package com.project.se2project.controller;
 
-import com.project.se2project.domain.Transaction.CreateTransactionResponse;
-import com.project.se2project.domain.Transaction.GetAllTransactionResponse;
-import com.project.se2project.domain.Transaction.GetTransactionResponse;
+import com.project.se2project.domain.Transaction.*;
+import com.project.se2project.model.Loan;
+import com.project.se2project.model.Saving;
+import com.project.se2project.service.LoanService;
+import com.project.se2project.service.SavingService;
+import com.project.se2project.utils.JwtUtil;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import com.project.se2project.domain.Transaction.CreateTransactionRequest;
 import com.project.se2project.model.Transaction;
 import com.project.se2project.service.TransactionService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +24,15 @@ public class TransactionController {
 
     @Autowired
     TransactionService transactionService;
+
+    @Autowired
+    LoanService loanService;
+
+    @Autowired
+    SavingService savingService;
+
+    @Autowired
+    private JwtUtil jwtUtil;
 
     @PostMapping(value = "/")
     public ResponseEntity<CreateTransactionResponse> createTransaction(@CookieValue(name = "jwt", defaultValue = "dark") String jwt, @Valid @RequestBody CreateTransactionRequest createTransactionRequest) {
@@ -67,6 +78,98 @@ public class TransactionController {
         }
     }
 
+    @GetMapping(value = "/log/{index}")
+    public ResponseEntity<GetTransactionLogResponse> getTransactionLogByIndex(@CookieValue(name = "jwt", defaultValue = "dark") String jwt, @PathVariable int index) {
+        try {
+            Long userId = transactionService.getUserIdByUsername(jwtUtil.getUsernameFromJWT(jwt));
+            System.out.println(userId);
+            Loan loan = loanService.findLoanByUserId(userId);
+            System.out.println("Loan:"+loan);
+            List<Saving> savingList = savingService.findSavingByUserId(userId);
+            System.out.println(savingList);
+            List<Transaction> transferList = transactionService.getAllTransactionsByUserId(userId);
+            System.out.println(transferList);
+            List<GetTransactionLogResponse> getTransactionLogResponseList = new ArrayList<>();
+            transferList.forEach(transaction -> {
+                getTransactionLogResponseList.add(new GetTransactionLogResponse(transaction));
+            });
+            if (savingList != null || savingList.size() != 0) {
+                savingList.forEach(saving -> {
+                    getTransactionLogResponseList.add(new GetTransactionLogResponse(saving));
+                });
+            }
+            if (loan != null) {
+                getTransactionLogResponseList.add(new GetTransactionLogResponse(loan));
+            }
+
+            //sort the list by getDate()
+            getTransactionLogResponseList.sort((o1, o2) -> o2.getDate().compareTo(o1.getDate()));
+            return ResponseEntity.status(HttpStatus.OK).body(getTransactionLogResponseList.get(index));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(new GetTransactionLogResponse(e.getMessage()));
+        }
+    }
+
+    @GetMapping(value = "/log/all")
+    public ResponseEntity<GetAllTransactionLogResponse> getAllTransactionLog( @CookieValue(name = "jwt", defaultValue = "dark") String jwt) {
+        try {
+            Long userId = transactionService.getUserIdByUsername(jwtUtil.getUsernameFromJWT(jwt));
+            Loan loan = loanService.findLoanByUserId(userId);
+            List<Saving> savingList = savingService.findSavingByUserId(userId);
+            List<Transaction> transferList = transactionService.getAllTransactionsByUserId(userId);
+            List<GetTransactionLogResponse> getTransactionLogResponseList = new ArrayList<>();
+            transferList.forEach(transaction -> {
+                getTransactionLogResponseList.add(new GetTransactionLogResponse(transaction));
+            });
+            if (savingList != null || savingList.size() != 0) {
+                savingList.forEach(saving -> {
+                    getTransactionLogResponseList.add(new GetTransactionLogResponse(saving));
+                });
+            }
+            if (loan != null) {
+                getTransactionLogResponseList.add(new GetTransactionLogResponse(loan));
+            }
+            //sort the list by getDate()
+            getTransactionLogResponseList.sort((o1, o2) -> o2.getDate().compareTo(o1.getDate()));
+            System.out.println(getTransactionLogResponseList.size());
+            return ResponseEntity.status(HttpStatus.OK).body(new GetAllTransactionLogResponse(getTransactionLogResponseList));
+        } catch (Exception e) {
+            System.out.println("ERROR BITCH");
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(new GetAllTransactionLogResponse(e.getMessage()));
+        }
+    }
+
+    @GetMapping(value="/log/user/{userId}")
+    public ResponseEntity<GetAllTransactionLogResponse> getAllTransactionLogByUserId(@PathVariable Long userId) {
+        try {
+
+            Loan loan = loanService.findLoanByUserId(userId);
+            List<Saving> savingList = savingService.findSavingByUserId(userId);
+            List<Transaction> transferList = transactionService.getAllTransactionsByUserId(userId);
+            List<GetTransactionLogResponse> getTransactionLogResponseList = new ArrayList<>();
+            transferList.forEach(transaction -> {
+                getTransactionLogResponseList.add(new GetTransactionLogResponse(transaction));
+            });
+            if (savingList != null && savingList.size() != 0) {
+                savingList.forEach(saving -> {
+                    getTransactionLogResponseList.add(new GetTransactionLogResponse(saving));
+                });
+            }
+            if (loan != null) {
+                getTransactionLogResponseList.add(new GetTransactionLogResponse(loan));
+            }
+            //sort the list by getDate()
+            getTransactionLogResponseList.sort((o1, o2) -> o2.getDate().compareTo(o1.getDate()));
+            System.out.println(getTransactionLogResponseList.size());
+            return ResponseEntity.status(HttpStatus.OK).body(new GetAllTransactionLogResponse(getTransactionLogResponseList));
+        } catch (Exception e) {
+            System.out.println("ERROR BITCH");
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(new GetAllTransactionLogResponse(e.getMessage()));
+        }
+    }
+
+
+
     @GetMapping(value = "/{page}")
     public ResponseEntity<GetAllTransactionResponse> getAllTransactionPerPage(@PathVariable int page, @CookieValue(name = "jwt", defaultValue = "dark") String jwt) {
         try {
@@ -89,7 +192,7 @@ public class TransactionController {
         try {
 
             Long userId = transactionService.getUserIdByUsername(username);
-            List<Transaction> transactionList = transactionService.getAllTransactionsByUserId(userId, jwt);
+            List<Transaction> transactionList = transactionService.getAllTransactionsByUserId(userId);
             List<GetTransactionResponse> getTransactionResponseList = new ArrayList<>();
             transactionList.forEach(transaction -> {
                 getTransactionResponseList.add(new GetTransactionResponse(transaction));
