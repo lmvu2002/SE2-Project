@@ -100,7 +100,6 @@ public class SavingController {
 
     @PostMapping(value = "/make_saving")
     public ResponseEntity<?> makeSaving(@Valid @RequestBody SavingRequest savingRequest, @CookieValue(name = "jwt", defaultValue = "dark") String jwt) {
-        JwtUtil jwtUtil = new JwtUtil();
 
         long userId = jwtUtil.getUserIdFromJWT(jwt);
         User user = userRepository.findByUsername("0" + String.valueOf(userId)).get();
@@ -135,7 +134,6 @@ public class SavingController {
             User user = userRepository.findByUsername("0" + String.valueOf(userId)).get();
             long id = user.getId();
             List<Saving> savings = savingService.findSavingByUserId(id);
-            int size = savings.size();
             List<GetSavingResponse> savingResponses = new ArrayList<>();
             for (Saving saving : savings) {
                 savingResponses.add(new GetSavingResponse(saving));
@@ -144,8 +142,6 @@ public class SavingController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new GetAllSavingResponse(e.getMessage()));
         }
     }
-
-
 
     @PostMapping(value = "/user/savings/{id}/withdraw")
     public ResponseEntity<?> withdrawSaving(@PathVariable("id") long id,

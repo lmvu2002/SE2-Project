@@ -104,9 +104,6 @@ public class SavingService {
 
     public boolean hasSaving(User user) throws Exception{
         List<Saving> saving = savingRepository.findByUser(user);
-        if(saving == null){
-            return false;
-        }
-        return false;
+        return saving != null;
     }
 }

@@ -89,7 +89,7 @@ public class Saving {
     public void setNextIncomeDate(String nextIncomeDate) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
         LocalDate date = LocalDate.parse(nextIncomeDate, formatter);
-        date = date.plusMonths(1);
+        date = date.plusDays(1);
         this.nextIncomeDate = date.format(formatter);
     }
 }
