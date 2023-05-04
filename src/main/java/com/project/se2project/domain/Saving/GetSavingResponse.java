@@ -10,6 +10,8 @@ public class GetSavingResponse implements Serializable {
     private long id;
 
     private long userID;
+
+    private String username;
     private long money;
     private String startDate;
     private long rate;
@@ -24,6 +26,7 @@ public class GetSavingResponse implements Serializable {
     public GetSavingResponse(Saving saving) {
         this.id = saving.getId();
         this.userID = saving.getUser().getId();
+        this.username = saving.getUser().getUsername();
         this.money = saving.getMoney();
         this.startDate = saving.getStartDate();
         this.rate = saving.getRate();
@@ -48,6 +51,14 @@ public class GetSavingResponse implements Serializable {
 
     public void setUserID(long userID) {
         this.userID = userID;
+    }
+
+public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public long getMoney() {
