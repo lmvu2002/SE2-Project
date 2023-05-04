@@ -106,6 +106,6 @@ public class DepositService {
     public void takeMoney(long id) throws Exception {
         Deposit deposit = depositRepository.findById(id).get();
         deposit.setMoney(0);
-        depositRepository.save(deposit);
+        depositRepository.delete(deposit);
     }
 }
