@@ -88,9 +88,10 @@ public class SavingService {
             throw new Exception("Not enough money");
         }
         saving.setMoney(saving.getMoney() - amount);
+        savingRepository.save(saving);
         if(saving.getMoney() <= 0){
             savingRepository.delete(saving);
-        } else savingRepository.save(saving);
+        }
         return saving;
     }
 

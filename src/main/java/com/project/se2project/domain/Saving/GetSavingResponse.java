@@ -92,4 +92,12 @@ public String getUsername() {
     public void setNextIncomeDate(String nextIncomeDate) {
         this.nextIncomeDate = nextIncomeDate;
     }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
+    }
 }
