@@ -9,6 +9,10 @@ public class GetAllDepositResponse implements Serializable {
 
     private List<GetDepositResponse> allDeposit;
 
+    public GetAllDepositResponse() {
+
+    }
+
     public GetAllDepositResponse(List<GetDepositResponse> allDeposit) {
         this.allDeposit = allDeposit;
         this.message = "OK";
@@ -24,5 +28,13 @@ public class GetAllDepositResponse implements Serializable {
 
     public void setMessage(String message) {
         this.message = message;
+    }
+
+    public List<GetDepositResponse> getAllDeposit() {
+        return allDeposit;
+    }
+
+    public void setAllDeposit(List<GetDepositResponse> allDeposit) {
+        this.allDeposit = allDeposit;
     }
 }

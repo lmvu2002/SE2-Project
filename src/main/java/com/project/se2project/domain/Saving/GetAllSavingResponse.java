@@ -22,7 +22,7 @@ public class GetAllSavingResponse implements Serializable {
         return allSaving;
     }
 
-    public void setAllLoan(List<GetSavingResponse> allSaving) {
+    public void setAllSaving(List<GetSavingResponse> allSaving) {
         this.allSaving = allSaving;
     }
 
