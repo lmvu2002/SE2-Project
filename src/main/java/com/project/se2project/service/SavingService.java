@@ -88,6 +88,9 @@ public class SavingService {
             throw new Exception("Not enough money");
         }
         saving.setMoney(saving.getMoney() - amount);
+        User user = saving.getUser();
+        long newBalance = user.getBalance() + amount;
+        user.setBalance(newBalance);
         savingRepository.save(saving);
         if(saving.getMoney() <= 0){
             savingRepository.delete(saving);
