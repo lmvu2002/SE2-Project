@@ -24,7 +24,7 @@ public class SavingService {
     @Autowired
     private AdminService adminService;
 
-    public Saving makeSaving(User user, long money, String startDate, long rate , String nextIncomeDate) throws Exception {
+    public Saving makeSaving(User user, long money, String startDate, long rate) throws Exception {
         // create a new saving object and set its properties
         Saving saving = new Saving(user, money, startDate, rate);
         // save the saving to the database
@@ -91,6 +91,19 @@ public class SavingService {
         if(saving.getMoney() <= 0){
             savingRepository.delete(saving);
         } else savingRepository.save(saving);
+        return saving;
+    }
+
+    public boolean hasSaving(User user) throws Exception{
+        List<Saving> saving = savingRepository.findByUser(user);
+        return saving != null;
+    }
+
+    public Saving findSavingById(long id) throws Exception {
+        Saving saving = savingRepository.findById(id).get();
+        if(saving == null){
+            throw new Exception("Saving not found");
+        }
         return saving;
     }
 }

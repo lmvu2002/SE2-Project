@@ -1,8 +1,10 @@
 package com.project.se2project.controller;
 
 import com.project.se2project.domain.Transaction.*;
+import com.project.se2project.model.Deposit;
 import com.project.se2project.model.Loan;
 import com.project.se2project.model.Saving;
+import com.project.se2project.service.DepositService;
 import com.project.se2project.service.LoanService;
 import com.project.se2project.service.SavingService;
 import com.project.se2project.utils.JwtUtil;
@@ -30,6 +32,9 @@ public class TransactionController {
 
     @Autowired
     SavingService savingService;
+
+    @Autowired
+    DepositService depositService;
 
     @Autowired
     private JwtUtil jwtUtil;
@@ -115,6 +120,7 @@ public class TransactionController {
         try {
             Long userId = transactionService.getUserIdByUsername(jwtUtil.getUsernameFromJWT(jwt));
             Loan loan = loanService.findLoanByUserId(userId);
+            List<Deposit> depositList = depositService.findDepositByUserId(userId);
             List<Saving> savingList = savingService.findSavingByUserId(userId);
             List<Transaction> transferList = transactionService.getAllTransactionsByUserId(userId);
             List<GetTransactionLogResponse> getTransactionLogResponseList = new ArrayList<>();
@@ -124,6 +130,11 @@ public class TransactionController {
             if (savingList != null || savingList.size() != 0) {
                 savingList.forEach(saving -> {
                     getTransactionLogResponseList.add(new GetTransactionLogResponse(saving));
+                });
+            }
+            if (depositList != null && depositList.size() != 0) {
+                depositList.forEach(deposit -> {
+                    getTransactionLogResponseList.add(new GetTransactionLogResponse(deposit));
                 });
             }
             if (loan != null) {
@@ -144,6 +155,7 @@ public class TransactionController {
         try {
 
             Loan loan = loanService.findLoanByUserId(userId);
+            List<Deposit> depositList = depositService.findDepositByUserId(userId);
             List<Saving> savingList = savingService.findSavingByUserId(userId);
             List<Transaction> transferList = transactionService.getAllTransactionsByUserId(userId);
             List<GetTransactionLogResponse> getTransactionLogResponseList = new ArrayList<>();
@@ -153,6 +165,11 @@ public class TransactionController {
             if (savingList != null && savingList.size() != 0) {
                 savingList.forEach(saving -> {
                     getTransactionLogResponseList.add(new GetTransactionLogResponse(saving));
+                });
+            }
+            if (depositList != null && depositList.size() != 0) {
+                depositList.forEach(deposit -> {
+                    getTransactionLogResponseList.add(new GetTransactionLogResponse(deposit));
                 });
             }
             if (loan != null) {

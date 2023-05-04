@@ -3,6 +3,7 @@ package com.project.se2project.service;
 import com.project.se2project.model.Deposit;
 import com.project.se2project.model.User;
 import com.project.se2project.repository.DepositRepository;
+import com.project.se2project.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,6 +14,9 @@ public class DepositService {
 
     @Autowired
     private DepositRepository depositRepository;
+
+    @Autowired
+    private UserRepository userRepository;
 
     @Autowired
     private UserService userService;
@@ -90,6 +94,12 @@ public class DepositService {
         if (deposit == null) {
             throw new Exception("Deposit not found");
         }
+        return deposit;
+    }
+
+    public List<Deposit> findDepositByUserId(Long userId) throws Exception {
+        User user = userRepository.findById(userId).get();
+        List<Deposit> deposit = depositRepository.findByUser(user);
         return deposit;
     }
 
