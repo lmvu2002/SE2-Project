@@ -8,12 +8,12 @@ import org.springframework.boot.context.properties.bind.DefaultValue;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Date;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 @Entity
 public class Loan {
+
+    private static Set<Long> generatedIds = new HashSet<>();
 
     @Id
     @Column(name = "id", nullable = false)
@@ -22,7 +22,12 @@ public class Loan {
     @PrePersist
     public void generateId() {
         Random random = new Random();
-        this.id = random.nextLong(90000) + 10000;
+        long newId;
+        do {
+            newId = random.nextLong(90000) + 10000;
+        } while (generatedIds.contains(newId));
+        generatedIds.add(newId);
+        this.id = newId;
     }
 
     @OneToOne(fetch = FetchType.LAZY)

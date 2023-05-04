@@ -4,13 +4,30 @@ import groovyjarjarpicocli.CommandLine;
 import jakarta.persistence.*;
 import org.springframework.lang.NonNull;
 
+import java.util.HashSet;
+import java.util.Random;
+import java.util.Set;
+
 @Entity
 @Table(name = "transaction")
 public class Transaction {
+    private static Set<Long> generatedIds = new HashSet<>();
+
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "transaction_id", nullable = false)
-    private Long transactionId;
+    private long transactionId;
+
+    @PrePersist
+    public void generateId() {
+        Random random = new Random();
+        long newId;
+        do {
+            newId = random.nextLong(90000) + 10000;
+        } while (generatedIds.contains(newId));
+        generatedIds.add(newId);
+        this.transactionId = newId;
+    }
+
     @NonNull
     private Long fromUserId;
     @NonNull
