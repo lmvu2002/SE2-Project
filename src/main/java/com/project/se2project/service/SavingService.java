@@ -83,14 +83,6 @@ public class SavingService {
         }
     }
 
-    public Saving findSavingById(long id) throws Exception {
-        Saving saving = savingRepository.findById(id).get();
-        if(saving == null){
-            throw new Exception("Saving not found");
-        }
-        return saving;
-    }
-
     public Saving takeMoneyFromSaving(long id, long amount) throws Exception{
         Saving saving = savingRepository.findById(id).get();
         if(saving == null){
@@ -113,5 +105,13 @@ public class SavingService {
     public boolean hasSaving(User user) throws Exception{
         List<Saving> saving = savingRepository.findByUser(user);
         return saving != null;
+    }
+
+    public Saving findSavingById(long id) throws Exception {
+        Saving saving = savingRepository.findById(id).get();
+        if(saving == null){
+            throw new Exception("Saving not found");
+        }
+        return saving;
     }
 }

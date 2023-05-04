@@ -1,9 +1,6 @@
 package com.project.se2project.domain.Transaction;
 
-import com.project.se2project.model.Loan;
-import com.project.se2project.model.Saving;
-import com.project.se2project.model.Transaction;
-import com.project.se2project.model.User;
+import com.project.se2project.model.*;
 
 import java.io.Serializable;
 
@@ -20,10 +17,12 @@ public class GetTransactionLogResponse implements Serializable {
     private String transactionTime;
     //LOAN
     private Long loanId;
+    private Long depositId;
     private long userId;
     private String username;
     private Long inMoney;
     private String startDate;
+    private String endDate;
     private int duration;
     private Long rate;
     private Long totalMoney;
@@ -67,6 +66,19 @@ public class GetTransactionLogResponse implements Serializable {
         this.startDate = saving.getStartDate();
         this.rate = saving.getRate();
         this.nextIncomeDate = saving.getNextIncomeDate();
+    }
+
+    public GetTransactionLogResponse(Deposit deposit) {
+        this.type = "DEPOSIT";
+        this.depositId = deposit.getId();
+        this.userId = deposit.getUser().getId();
+        this.username = deposit.getUser().getName();
+        this.money = deposit.getMoney();
+        this.startDate = deposit.getStartDate();
+        this.rate = deposit.getRate();
+        this.duration = deposit.getDuration();
+        this.endDate = deposit.getEndDate();
+        this.totalMoney = deposit.getTotalMoney();
     }
 
     public String getDate() {
@@ -150,6 +162,14 @@ public class GetTransactionLogResponse implements Serializable {
 
     public String getType() {
         return type;
+    }
+
+    public Long getDepositId() {
+        return depositId;
+    }
+
+    public String getEndDate() {
+        return endDate;
     }
 
     public String getMessage() {
