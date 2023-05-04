@@ -4,10 +4,14 @@ import jakarta.persistence.*;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.HashSet;
 import java.util.Random;
+import java.util.Set;
 
 @Entity
 public class Deposit {
+    private static Set<Long> generatedIds = new HashSet<>();
+
     @Id
     @Column(name = "id", nullable = false)
     private long id;
@@ -15,7 +19,12 @@ public class Deposit {
     @PrePersist
     public void generateId() {
         Random random = new Random();
-        this.id = random.nextLong(90000) + 10000;
+        long newId;
+        do {
+            newId = random.nextLong(90000) + 10000;
+        } while (generatedIds.contains(newId));
+        generatedIds.add(newId);
+        this.id = newId;
     }
 
     @ManyToOne(fetch = FetchType.LAZY)
