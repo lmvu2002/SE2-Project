@@ -7,7 +7,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.Random;
 
 @Entity
-public class Saving {
+public class Deposit {
     @Id
     @Column(name = "id", nullable = false)
     private long id;
@@ -28,18 +28,24 @@ public class Saving {
 
     private long rate;
 
-    private String nextIncomeDate;
+    private int duration;
 
-    public Saving(User user, long money, String startDate, long rate) {
+    private String endDate;
+
+    private long totalMoney;
+
+    public Deposit(User user, long money, String startDate, long rate, int duration, String endDate, long totalMoney) {
         generateId();
         this.user = user;
         this.money = money;
         this.startDate = startDate;
         this.rate = rate;
-        setNextIncomeDate(startDate);
+        this.duration = duration;
+        this.endDate = endDate;
+        this.totalMoney = totalMoney;
     }
 
-    public Saving() {
+    public Deposit() {
     }
 
     public long getId() {
@@ -74,7 +80,7 @@ public class Saving {
         this.startDate = startDate;
     }
 
-    public Long getRate() {
+    public long getRate() {
         return rate;
     }
 
@@ -82,14 +88,34 @@ public class Saving {
         this.rate = rate;
     }
 
-    public String getNextIncomeDate() {
-        return nextIncomeDate;
+    public int getDuration() {
+        return duration;
     }
 
-    public void setNextIncomeDate(String nextIncomeDate) {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-        LocalDate date = LocalDate.parse(nextIncomeDate, formatter);
-        date = date.plusDays(1);
-        this.nextIncomeDate = date.format(formatter);
+    public void setDuration(int duration) {
+        this.duration = duration;
+    }
+
+    public String getEndDate() {
+        return endDate;
+    }
+
+    public void setEndDate(String startDate, int duration) {
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        LocalDate formattedStartDate = LocalDate.parse(startDate, dtf);
+        LocalDate end = formattedStartDate.plusMonths(duration);
+        this.endDate = end.format(dtf);
+    }
+
+    public void setEndDate(String endDate) {
+        this.endDate = endDate;
+    }
+
+    public long getTotalMoney() {
+        return totalMoney;
+    }
+
+    public void setTotalMoney(long money, long rate, int duration) {
+        this.totalMoney = money + (money * rate * duration) / 100;
     }
 }
