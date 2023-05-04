@@ -96,6 +96,10 @@ public class SavingService {
         double interest = saving.getRate()/3600000.0;
         double total = saving.getMoney()*Math.pow((1 + interest), days);
         saving.setMoney((long) total - amount);
+        User user = saving.getUser();
+        long newBalance = user.getBalance() + amount;
+        user.setBalance(newBalance);
+        savingRepository.save(saving);
         if(saving.getMoney() <= 0){
             savingRepository.delete(saving);
         } else savingRepository.save(saving);
