@@ -111,8 +111,13 @@ public class SavingController {
                                             @CookieValue(name = "jwt", defaultValue = "dark") String jwt) {
         try {
             long money = Long.parseLong(requestBody.get("money").toString());
-            Saving saving = savingService.takeMoneyFromSaving(id, money);
+            Saving savingBef = savingRepository.findById(id).get();
+            if (money > savingBef.getMoney()) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new GetSavingResponse("Not enough money"));
+            } else {
+                Saving saving = savingService.takeMoneyFromSaving(id, money);
             return ResponseEntity.status(HttpStatus.OK).body(new GetSavingResponse(saving));
+            }
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Error(e.getMessage()));
         }

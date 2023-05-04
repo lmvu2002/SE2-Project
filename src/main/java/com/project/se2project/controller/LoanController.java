@@ -1,9 +1,6 @@
 package com.project.se2project.controller;
 
-import com.project.se2project.domain.Loan.GetAllLoanResponse;
-import com.project.se2project.domain.Loan.GetLoanResponse;
-import com.project.se2project.domain.Loan.LoanRequest;
-import com.project.se2project.domain.Loan.LoanResponse;
+import com.project.se2project.domain.Loan.*;
 import com.project.se2project.model.Loan;
 import com.project.se2project.model.User;
 import com.project.se2project.repository.LoanRepository;
@@ -25,7 +22,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import static java.lang.Long.parseLong;
 
 @RestController
 @CrossOrigin(origins = "http://localhost:8081", allowCredentials = "true")
@@ -63,17 +59,48 @@ public class LoanController {
         LocalDateTime currentDateTime = LocalDateTime.now();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
         String formattedDateTime = currentDateTime.format(formatter);
+        // check if user have loan
+        if (loanRepository.findByUser(user).isEmpty()) {
+            try {
+                Loan loan = loanService.makeLoan(
+                        user,
+                        inMoney,
+                        formattedDateTime,
+                        duration,
+                        rate,
+                        jwt
+                );
+
+                adminService.manageUserBalance(user.getId(), inMoney);
+                return ResponseEntity.status(HttpStatus.OK).body(new LoanResponse(loan));
+            }catch (Exception e) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Error(e.getMessage()));
+            }
+        }else return ResponseEntity.status(HttpStatus.OK).body(new LoanResponse("Already have a loan"));
+    }
+
+    @GetMapping(value = "/loan/check_date")
+    public ResponseEntity<?> checkDate(@CookieValue(name = "jwt", defaultValue = "dark") String jwt) throws NotFoundException {
         try {
-            Loan loan = loanService.makeLoan(
-                    user,
-                    inMoney,
-                    formattedDateTime,
-                    duration,
-                    rate,
-                    jwt
-            );
-            adminService.manageUserBalance(user.getId(), inMoney);
-            return ResponseEntity.status(HttpStatus.OK).body(new LoanResponse(loan));
+            JwtUtil jwtUtil = new JwtUtil();
+            long userId = jwtUtil.getUserIdFromJWT(jwt);
+            User user = userRepository.findByUsername("0" + String.valueOf(userId)).get();
+            List<Loan> loanList = loanRepository.findByUser(user);
+            if (loanList.isEmpty()) {
+                return ResponseEntity.status(HttpStatus.OK).body(new CheckLoanDateResponse("No loan"));
+            }else {
+                Loan loan = loanList.get(0);
+                String next = loan.getNextPaymentDate();
+                DateTimeFormatter df = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+                LocalDateTime now = LocalDateTime.now();
+                LocalDateTime nextDate = LocalDateTime.parse(next, df);
+                if (now.isAfter(nextDate) && now.isEqual(nextDate)) {
+                    long pay = loan.getNextPayment();
+                    return ResponseEntity.status(HttpStatus.OK).body(new CheckLoanDateResponse("can pay", true, pay));
+                } else {
+                    return ResponseEntity.status(HttpStatus.OK).body(new CheckLoanDateResponse("can't pay", false, 0));
+                }
+            }
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new Error(e.getMessage()));
         }
@@ -155,7 +182,6 @@ public class LoanController {
             Loan loan = loanService.findLoanByUserId(id);
             long thisMonthLoan = loan.getNextPayment();
             long userBalance = user.getBalance();
-            System.out.println("userBalance: " + userBalance);
             if (userBalance >= thisMonthLoan) {
                 loanService.monthlyPayment(jwt, thisMonthLoan);
                 adminService.manageUserBalance(id, -thisMonthLoan);

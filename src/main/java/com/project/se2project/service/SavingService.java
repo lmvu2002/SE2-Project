@@ -84,9 +84,13 @@ public class SavingService {
         Saving saving = savingRepository.findById(id).get();
         if(saving == null){
             throw new Exception("Saving not found");
+        } if (saving.getMoney() < amount){
+            throw new Exception("Not enough money");
         }
         saving.setMoney(saving.getMoney() - amount);
-        savingRepository.save(saving);
+        if(saving.getMoney() <= 0){
+            savingRepository.delete(saving);
+        } else savingRepository.save(saving);
         return saving;
     }
 }
