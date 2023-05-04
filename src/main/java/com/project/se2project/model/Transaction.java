@@ -38,6 +38,7 @@ public class Transaction {
     private String transactionTime;
 
     public Transaction(@NonNull Long fromUserId, @NonNull Long toUserId, int amount,@NonNull String transactionTime) {
+        generateId();
         this.fromUserId = fromUserId;
         this.toUserId = toUserId;
         this.amount = amount;
