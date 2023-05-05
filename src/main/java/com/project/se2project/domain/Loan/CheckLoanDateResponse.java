@@ -35,4 +35,20 @@ public class CheckLoanDateResponse implements Serializable {
         public long getNextPayment() {
             return nextPayment;
         }
+
+    public void setMessage(String message) {
+        this.message = message;
+    }
+
+    public boolean isCheck() {
+        return check;
+    }
+
+    public void setCheck(boolean check) {
+        this.check = check;
+    }
+
+    public void setNextPayment(long nextPayment) {
+        this.nextPayment = nextPayment;
+    }
 }
