@@ -16,6 +16,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -93,8 +94,8 @@ public class LoanController {
                 String next = loan.getNextPaymentDate();
                 DateTimeFormatter df = DateTimeFormatter.ofPattern("dd/MM/yyyy");
                 LocalDateTime now = LocalDateTime.now();
-                LocalDateTime nextDate = LocalDateTime.parse(next, df);
-                if (now.isAfter(nextDate) && now.isEqual(nextDate)) {
+                LocalDateTime nextDate = LocalDate.parse(next, df).atStartOfDay();
+                if (now.isAfter(nextDate) || now.isEqual(nextDate)){
                     long pay = loan.getNextPayment();
                     return ResponseEntity.status(HttpStatus.OK).body(new CheckLoanDateResponse("can pay", true, pay));
                 } else {
