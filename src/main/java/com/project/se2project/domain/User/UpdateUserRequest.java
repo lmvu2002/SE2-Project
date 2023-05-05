@@ -17,14 +17,24 @@ public class UpdateUserRequest implements Serializable {
     private String phone;
     private String name;
 
+    @NotBlank(message = "User type cannot be blank")
+    private String type;
+
+    @NotBlank(message = "User name cannot be blank")
+    private String username;
+
+    private boolean isNew;
+
     public UpdateUserRequest() {
     }
 
-    public UpdateUserRequest(long balance, String dob, String phone, String name) {
+    public UpdateUserRequest(long balance, String dob, boolean isNew, String username, String phone, String type) {
         this.balance = balance;
         this.dob = dob;
+        this.isNew = isNew;
         this.phone = phone;
-        this.name = name;
+        this.username = username;
+        this.type = type;
     }
 
     public String getName() {
@@ -60,4 +70,27 @@ public class UpdateUserRequest implements Serializable {
         this.phone = phone;
     }
 
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public boolean isNew() {
+        return isNew;
+    }
+
+    public void setNew(boolean aNew) {
+        isNew = aNew;
+    }
 }

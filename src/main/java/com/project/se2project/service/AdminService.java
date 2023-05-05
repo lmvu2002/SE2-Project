@@ -3,6 +3,7 @@ package com.project.se2project.service;
 import com.project.se2project.custom_exception.AlreadyException;
 import com.project.se2project.custom_exception.AuthException;
 import com.project.se2project.model.Admin;
+import com.project.se2project.model.Loan;
 import com.project.se2project.model.User;
 import com.project.se2project.repository.AdminRepository;
 import com.project.se2project.repository.UserRepository;
