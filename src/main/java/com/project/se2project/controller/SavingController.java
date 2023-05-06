@@ -174,7 +174,7 @@ public class SavingController {
         }
     }
 
-    @DeleteMapping(value = "/user/savings/{id}/delete")
+    @DeleteMapping(value = "/user/savings/delete/{id}")
     public ResponseEntity<?> deleteSaving(@PathVariable("id") long id,
                                           @CookieValue(name = "jwt", defaultValue = "dark") String jwt) {
         try {
