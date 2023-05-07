@@ -8,13 +8,11 @@ import jakarta.validation.constraints.Size;
 import java.io.Serializable;
 
 public class UpdateUserRequest implements Serializable {
-    private long balance;
 
     @NotBlank(message = "User DOB cannot be blank")
     private String dob;
 
-    @NotBlank(message = "User phone cannot be blank")
-    private String phone;
+
     private String name;
 
     @NotBlank(message = "User type cannot be blank")
@@ -28,11 +26,10 @@ public class UpdateUserRequest implements Serializable {
     public UpdateUserRequest() {
     }
 
-    public UpdateUserRequest(long balance, String dob, boolean isNew, String username, String phone, String type) {
-        this.balance = balance;
+    public UpdateUserRequest(String name, String dob, boolean isNew, String username, String type) {
+        this.name = name;
         this.dob = dob;
         this.isNew = isNew;
-        this.phone = phone;
         this.username = username;
         this.type = type;
     }
@@ -45,13 +42,6 @@ public class UpdateUserRequest implements Serializable {
         this.name = name;
     }
 
-    public long getBalance() {
-        return balance;
-    }
-
-    public void setBalance(long balance) {
-        this.balance = balance;
-    }
 
     public String getDob() {
         return dob;
@@ -62,13 +52,6 @@ public class UpdateUserRequest implements Serializable {
     }
     
 
-    public String getPhone() {
-        return phone;
-    }
-
-    public void setPhone(String phone) {
-        this.phone = phone;
-    }
 
     public String getType() {
         return type;

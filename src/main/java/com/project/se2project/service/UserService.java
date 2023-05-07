@@ -144,12 +144,11 @@ public class UserService {
         if (currentUser.isEmpty()) {
             throw new NotFoundException("User not found");
         }
-
+        currentUser.get().setName(updateUserRequest.getName());
         currentUser.get().setDob(updateUserRequest.getDob());
-        currentUser.get().setBalance(updateUserRequest.getBalance());
-        currentUser.get().setType(updateUserRequest.getType());
         currentUser.get().setUsername(updateUserRequest.getUsername());
-
+        currentUser.get().setNew(updateUserRequest.isNew());
+        currentUser.get().setType(updateUserRequest.getType());
         userRepository.save(currentUser.get());
 
         return currentUser.get();
