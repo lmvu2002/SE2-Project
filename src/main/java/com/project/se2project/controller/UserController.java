@@ -29,7 +29,7 @@ public class UserController {
     private JwtUtil jwtUtil;
 
     @PostMapping(value = "/signup")
-    public ResponseEntity<?> signup(@Valid @RequestBody UserSignUpRequest userSignUpRequest, HttpServletResponse response) {
+    public ResponseEntity<?> signup(@CookieValue(name = "jwt", defaultValue = "dark") String jwt, @Valid @RequestBody UserSignUpRequest userSignUpRequest, HttpServletResponse response) {
         try {
             User user = userService.signUp(
                     userSignUpRequest.getUsername(),
@@ -38,17 +38,21 @@ public class UserController {
                     userSignUpRequest.getDob()
             );
 
-            final String jwt = jwtUtil.generateToken(user);
+            final String newJwt = jwtUtil.generateToken(user);
             UserSignUpResponse userSignUpResponse = new UserSignUpResponse(jwt, "Signup successful");
 
-            Cookie cookie = new Cookie("jwt", jwt);
-            cookie.setPath("/");
-            cookie.setAttribute("SameSite", "None");
-            cookie.setSecure(true);
-            cookie.setHttpOnly(true);
-            cookie.setMaxAge(COOKIE_EXPIRIED);
+            boolean isAdmin = userService.isAdmin(jwtUtil.getUsernameFromJWT(jwt));
 
-            response.addCookie(cookie);
+            if (!isAdmin) {
+                Cookie cookie = new Cookie("jwt", newJwt);
+                cookie.setPath("/");
+                cookie.setAttribute("SameSite", "None");
+                cookie.setSecure(true);
+                cookie.setHttpOnly(true);
+                cookie.setMaxAge(COOKIE_EXPIRIED);
+
+                response.addCookie(cookie);
+            }
 
             return ResponseEntity.status(HttpStatus.OK).body(userSignUpResponse);
         } catch (Exception e) {
