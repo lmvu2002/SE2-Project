@@ -25,7 +25,7 @@ import java.util.Map;
 
 
 @RestController
-@CrossOrigin(origins = "http://localhost:8081", allowCredentials = "true")
+@CrossOrigin(origins = {"https://summererabanking.com", "http://localhost:8081"}, allowCredentials = "true")
 @RequestMapping(value = "/user/")
 public class LoanController {
 

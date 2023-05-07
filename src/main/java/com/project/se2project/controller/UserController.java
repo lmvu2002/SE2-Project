@@ -19,7 +19,7 @@ import java.util.List;
 import static com.project.se2project.constant.SecurityConstant.COOKIE_EXPIRIED;
 
 @RestController
-@CrossOrigin(origins = "http://localhost:8081", allowCredentials = "true")
+@CrossOrigin(origins = {"https://summererabanking.com", "http://localhost:8081"}, allowCredentials = "true")
 @RequestMapping(value = "/user/")
 public class UserController {
     @Autowired
@@ -43,6 +43,9 @@ public class UserController {
 
             Cookie cookie = new Cookie("jwt", jwt);
             cookie.setPath("/");
+            cookie.setAttribute("SameSite", "None");
+            cookie.setSecure(true);
+            cookie.setHttpOnly(true);
             cookie.setMaxAge(COOKIE_EXPIRIED);
 
             response.addCookie(cookie);
@@ -72,6 +75,9 @@ public class UserController {
 
             Cookie cookie = new Cookie("jwt", jwt);
             cookie.setPath("/");
+            cookie.setAttribute("SameSite", "None");
+            cookie.setSecure(true);
+            cookie.setHttpOnly(true);
             cookie.setMaxAge(COOKIE_EXPIRIED);
 
             response.addCookie(cookie);

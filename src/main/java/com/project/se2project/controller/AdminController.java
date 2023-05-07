@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import static com.project.se2project.constant.SecurityConstant.COOKIE_EXPIRIED;
 
 @RestController
-@CrossOrigin(origins = "http://localhost:8081", allowCredentials = "true")
+@CrossOrigin(origins = {"https://summererabanking.com", "http://localhost:8081"}, allowCredentials = "true")
 @RequestMapping(value = "/admin/")
 public class AdminController {
     @Autowired

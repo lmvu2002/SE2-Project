@@ -23,7 +23,7 @@ import java.util.Map;
 import java.util.Objects;
 
 @RestController
-@CrossOrigin(origins = "http://localhost:8081", allowCredentials = "true")
+@CrossOrigin(origins = {"https://summererabanking.com", "http://localhost:8081"}, allowCredentials = "true")
 public class DepositController {
 
     @Autowired
